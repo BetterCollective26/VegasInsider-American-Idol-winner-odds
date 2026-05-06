@@ -1,14 +1,49 @@
-<!doctype html>
-<html lang="en" style="--brand-accent: #F2C23A; --brand-accent-2: #D9A72A; --brand-accent-rgb: 242,194,58;"><head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Kalshi Market Widget</title>
+<!-- VegasInsider Kalshi widget: page-safe iframe embed (fit fixed) -->
+<style>
+  .vi-kalshi-widget-embed {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0;
+    background: transparent;
+  }
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
+  .vi-kalshi-widget-embed iframe {
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    height: 600px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: hidden;
+  }
 
-  <style>
+  @media (max-width: 640px) {
+    .vi-kalshi-widget-embed iframe {
+      height: 820px;
+    }
+  }
+</style>
+
+<div class="vi-kalshi-widget-embed">
+  <iframe
+    id="viKalshiMarketFrame"
+    title="VegasInsider American Idol Kalshi market widget"
+    loading="lazy"
+    scrolling="no"
+    srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot; style=&quot;--brand-accent: #F2C23A; --brand-accent-2: #D9A72A; --brand-accent-rgb: 242,194,58;&quot;&gt;&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;
+  &lt;title&gt;Kalshi Market Widget&lt;/title&gt;
+
+  &lt;script src=&quot;https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js&quot;&gt;&lt;/script&gt;
+  &lt;script src=&quot;https://cdn.jsdelivr.net/npm/date-fns@2.30.0&quot;&gt;&lt;/script&gt;
+  &lt;script src=&quot;https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0&quot;&gt;&lt;/script&gt;
+
+  &lt;style&gt;
     :root{
       --vi-yellow:#F2C23A;
       --vi-yellow-2:#D9A72A;
@@ -56,7 +91,7 @@
     .searchHint{ margin-top:10px; font-size:13px; color:var(--vi-muted); }
 
     .searchInputRow{ display:flex; gap:12px; align-items:center; margin-top:10px; }
-    .searchInputRow > div:first-child{ flex:1 1 auto; min-width:0; }
+    .searchInputRow &gt; div:first-child{ flex:1 1 auto; min-width:0; }
     .loadWrap{ flex:0 0 auto; }
     @media (max-width:520px){
       .searchInputRow{ flex-wrap:wrap; }
@@ -161,7 +196,7 @@
       border:1px solid rgba(255,255,255,.14); box-shadow:0 10px 26px rgba(0,0,0,.25); z-index:50; white-space:normal;
     }
     .hasTip::before{
-      content:""; position:absolute; left:26px; top:100%; margin-top:4px; width:10px; height:10px;
+      content:&quot;&quot;; position:absolute; left:26px; top:100%; margin-top:4px; width:10px; height:10px;
       background:rgba(15,17,21,.96); border-left:1px solid rgba(255,255,255,.14); border-top:1px solid rgba(255,255,255,.14);
       transform:rotate(45deg); z-index:51;
     }
@@ -228,405 +263,855 @@
     body.lightTheme .tickerCell{ color:rgba(0,0,0,.72); }
 
 
-    /* --- Locked VegasInsider chart-only polish --- */
-    html, body{
+    /* --- Locked VegasInsider chart-only compact polish --- */
+    html{
       width:100%;
       max-width:100%;
       overflow-x:hidden;
+      background:transparent !important;
     }
+
     body{
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
       padding:0 !important;
-      background:#070809;
+      margin:0 !important;
+      background:transparent !important;
+      color:var(--vi-text);
     }
+
+    *,
+    *::before,
+    *::after{
+      box-sizing:border-box;
+    }
+
     .card{
-      max-width:1280px;
+      width:min(100%, 720px);
+      max-width:720px;
       margin:0 auto;
-      padding:28px 30px 32px;
-      border-radius:28px;
+      padding:18px 18px 20px;
+      border-radius:20px;
       background:
-        radial-gradient(circle at 12% 0%, rgba(242,194,58,.10), transparent 30%),
-        linear-gradient(180deg, #111315 0%, #0b0c0e 100%);
+        radial-gradient(circle at 12% 0%, rgba(242,194,58,.085), transparent 30%),
+        linear-gradient(180deg, #111315 0%, #08090a 100%);
       border:1px solid rgba(242,194,58,.26);
-      box-shadow:0 24px 70px rgba(0,0,0,.46), 0 0 0 1px rgba(255,255,255,.025) inset;
+      box-shadow:0 18px 44px rgba(0,0,0,.36), 0 0 0 1px rgba(255,255,255,.025) inset;
+      overflow:hidden;
     }
+
+    .headerRow{
+      align-items:flex-start;
+      gap:16px;
+      margin-bottom:6px;
+    }
+
     .eventTopTitle{
-      font-size:clamp(34px, 4.2vw, 52px);
-      line-height:1.05;
+      flex:1 1 auto;
+      min-width:0;
+      font-size:clamp(26px, 4.4vw, 36px);
+      line-height:1.03;
       letter-spacing:-.035em;
-      margin-bottom:14px;
+      margin:0;
+      padding:0;
+      color:var(--brand-accent);
     }
+
     .brandPill{
-      min-height:56px;
-      padding:10px 16px;
+      flex:0 0 auto;
+      min-height:38px;
+      padding:6px 9px;
       border-radius:999px;
-      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      border:1px solid rgba(242,194,58,.34);
-      box-shadow:0 14px 34px rgba(0,0,0,.35);
+      background:linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
+      border:1px solid rgba(242,194,58,.32);
+      box-shadow:0 10px 24px rgba(0,0,0,.28);
     }
+
     .viLogo{
-      height:34px;
-      max-width:225px;
-      padding:9px 18px;
-      border-radius:14px;
+      height:24px;
+      max-width:150px;
+      padding:5px 10px;
+      border-radius:12px;
       background:#fff;
     }
+
     .muted#meta{
-      font-size:16px;
-      margin:4px 0 16px;
-      color:rgba(255,255,255,.78);
+      font-size:13px;
+      line-height:1.35;
+      margin:8px 0 14px;
+      color:rgba(255,255,255,.76);
     }
+
     .statsBar{
-      gap:18px;
-      margin-top:16px;
+      display:flex !important;
+      gap:9px;
+      margin-top:0;
+      margin-bottom:10px;
     }
+
     .statTile{
-      border-radius:18px;
-      padding:18px 20px;
-      min-height:72px;
+      flex:1 1 0;
+      min-width:0;
+      min-height:68px;
+      border-radius:14px;
+      padding:12px 13px;
       background:linear-gradient(180deg, #F5CE55 0%, #E1B640 100%);
-      box-shadow:0 18px 34px rgba(0,0,0,.30), 0 1px 0 rgba(255,255,255,.23) inset;
+      box-shadow:0 12px 24px rgba(0,0,0,.25), 0 1px 0 rgba(255,255,255,.22) inset;
     }
+
     .statLabel{
-      font-size:14px;
-      letter-spacing:.55px;
-      color:rgba(0,0,0,.76);
+      font-size:12px;
+      line-height:1.15;
+      letter-spacing:.45px;
+      color:rgba(0,0,0,.75);
     }
+
     .statValue{
-      font-size:28px;
-      line-height:1.05;
-      margin-top:10px;
-      letter-spacing:.04em;
+      font-size:clamp(21px, 3.4vw, 27px);
+      line-height:1;
+      margin-top:8px;
+      letter-spacing:.02em;
     }
+
     .notionalRow{
-      margin-top:18px;
-      margin-bottom:14px;
+      margin:12px 0 12px;
     }
+
     .notionalPill{
-      padding:11px 22px;
+      max-width:100%;
+      padding:8px 14px;
       border-radius:999px;
-      font-size:18px;
-      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
-      border:1px solid rgba(242,194,58,.32);
-      box-shadow:0 16px 36px rgba(0,0,0,.38);
+      font-size:13px;
+      line-height:1.25;
+      background:linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.025));
+      border:1px solid rgba(242,194,58,.30);
+      box-shadow:0 12px 26px rgba(0,0,0,.30);
     }
+
     .legendRow{
-      gap:28px;
-      margin:8px 0 8px;
+      display:flex !important;
+      gap:10px 18px;
+      margin:3px 0 8px;
+      align-items:center;
     }
+
     .legendItem{
-      gap:12px;
-      font-size:18px;
-      color:rgba(255,255,255,.83);
+      gap:8px;
+      font-size:13px;
+      line-height:1.2;
+      color:rgba(255,255,255,.84);
+      white-space:nowrap;
     }
+
     .legendPct{
-      font-size:19px;
+      font-size:14px;
       color:#fff;
       margin-left:2px;
       font-weight:900;
     }
+
     .dot{
-      width:11px;
-      height:11px;
-      box-shadow:0 0 12px currentColor;
+      width:10px;
+      height:10px;
+      box-shadow:0 0 10px currentColor;
     }
+
     .chartWrap{
-      margin-top:6px;
+      margin-top:0;
     }
+
     .chartHeader{
       display:grid;
       grid-template-columns: 1fr auto 1fr;
       align-items:center;
-      margin-top:6px;
-      margin-bottom:10px;
+      gap:10px;
+      margin:2px 0 8px;
     }
+
     .chartTitle{
       justify-self:start;
-      font-size:20px;
+      font-size:15px;
+      line-height:1.2;
       font-weight:900;
       color:#fff;
     }
-    .chartHeader > .btnGroup:first-of-type{
+
+    .chartHeader &gt; .btnGroup:first-of-type{
       justify-self:center;
     }
+
     .btnGroup:has([data-chartmode]),
     [data-chartmode]{
       display:none !important;
     }
+
+    .btnGroup{
+      gap:7px;
+    }
+
     .btnSmall{
-      padding:8px 16px;
-      font-size:14px;
+      padding:7px 11px;
+      min-width:44px;
+      font-size:12px;
+      line-height:1;
       border-radius:999px;
       background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.035));
       border:1px solid rgba(255,255,255,.12);
       color:#f7f7f7;
-      box-shadow:0 10px 22px rgba(0,0,0,.26);
+      box-shadow:0 8px 18px rgba(0,0,0,.22);
     }
+
     .btnSmall.active{
       background:linear-gradient(180deg, #F5CE55 0%, #E1B640 100%);
       border-color:rgba(242,194,58,.72);
       color:#000;
     }
+
     .chartBox{
-      margin-top:8px;
-      border:1px solid rgba(255,255,255,.16);
-      border-radius:24px;
-      padding:28px 26px 22px;
+      margin-top:6px;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:18px;
+      padding:13px 12px 10px;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012)),
+        linear-gradient(180deg, rgba(255,255,255,.032), rgba(255,255,255,.012)),
         #111317;
-      box-shadow:0 18px 48px rgba(0,0,0,.36), 0 0 0 1px rgba(255,255,255,.02) inset;
+      box-shadow:0 16px 38px rgba(0,0,0,.30), 0 0 0 1px rgba(255,255,255,.02) inset;
     }
+
     canvas{
-      height:430px !important;
+      width:100% !important;
+      height:300px !important;
     }
+
     .chartMetaDark,
     .grid,
     .listWrap{
       display:none !important;
     }
+
     .err:empty,
     .debug:empty{
       display:none !important;
     }
+
     @media (max-width:760px){
-      .card{ padding:18px 16px 20px; border-radius:20px; }
-      .headerRow{ align-items:flex-start; }
-      .brandPill{ transform:scale(.82); transform-origin:top right; }
-      .statsBar{ gap:10px; }
-      .statTile{ min-width:100%; }
-      .notionalPill{ font-size:14px; flex-wrap:wrap; justify-content:center; }
-      .legendRow{ gap:14px; }
-      .legendItem{ font-size:14px; }
-      .chartHeader{ grid-template-columns:1fr; gap:10px; }
-      .chartHeader > .btnGroup:first-of-type{ justify-self:start; }
-      .chartBox{ padding:18px 12px 14px; border-radius:18px; }
-      canvas{ height:340px !important; }
+      .card{
+        width:100%;
+        max-width:720px;
+        padding:16px 14px 16px;
+        border-radius:18px;
+      }
+      .eventTopTitle{
+        font-size:clamp(24px, 5.8vw, 32px);
+      }
+      .viLogo{
+        height:22px;
+        max-width:142px;
+      }
+      .statTile{
+        min-height:62px;
+        padding:10px 12px;
+      }
+      .statValue{
+        font-size:22px;
+      }
+      canvas{
+        height:255px !important;
+      }
     }
-  </style>
-<style data-emotion="css" data-s=""></style><style>#searchWrap{display:none !important;} body{padding:0 !important;background:#070809 !important;}</style><script>window.__KALSHI_EMBED__ = {"exportMode":true,"brand":"vegasinsider","theme":"dark","range":"all","eventChartMode":"default","selectedEventMarketTicker":null,"marketTicker":null,"eventTicker":"KXAMERICANIDOL-26DEC31"};</script></head>
-<body cz-shortcut-listen="true">
-  <div class="searchWrap" id="searchWrap" style="display: block;">
-    <div class="searchInner">
-      <div class="searchTitleRow">
-        <div class="searchTitle" id="title">Enter a market ticker or event ticker</div>
-        <button class="miniBtn" id="themeBtn" type="button">Theme</button>
-        <div class="ddWrap" id="brandDD">
-          <button class="miniBtn" id="brandBtn" type="button" aria-haspopup="menu" aria-expanded="false">Brand ▾</button>
-          <div id="brandMenu" class="brandMenu hidden" role="menu" aria-label="Brand Menu">
-            <button type="button" class="brandOpt" data-brand="vegasinsider">VegasInsider</button>
-            <button type="button" class="brandOpt" data-brand="actionnetwork">Action Network</button>
-            <button type="button" class="brandOpt" data-brand="canadasb">Canada Sports Betting</button>
-            <button type="button" class="brandOpt" data-brand="rotogrinders">RotoGrinders</button>
-          </div>
-        </div>
-        <div class="ddWrap" id="htmlDD">
-          <button class="miniBtn" id="downloadHtmlBtn" type="button" aria-haspopup="menu" aria-expanded="false">HTML ▾</button>
-          <div id="htmlMenu" class="htmlMenu hidden" role="menu" aria-label="HTML Menu">
-            <button type="button" class="htmlOpt" id="htmlDownloadOpt">Download locked HTML</button>
-            <button type="button" class="htmlOpt" id="htmlCopyOpt">Copy locked HTML</button>
-          </div>
-        </div>
-      </div>
-      <div class="row searchInputRow">
-        <div>
-          <input id="inputBox" placeholder="Market ticker OR event ticker (e.g. KXMARMAD-26 or KXFEDCHAIRNOM-29)" data-sharkid="__0">
-        </div>
-        <div class="loadWrap">
-          <button id="loadBtn">Load</button>
-        </div>
-      </div>
-      <div class="searchHint">Paste a Kalshi market ticker or event ticker from the end of the URL.</div>
-    </div>
-  </div>
 
-  <div class="card" id="widgetCard" style="--brand-accent: #F2C23A; --brand-accent-2: #D9A72A; --brand-accent-rgb: 242,194,58; display: block;">
-    <div class="row headerRow">
-      <div class="eventTopTitle" id="eventTopTitle" style="display: flex;"><span id="eventTopTitleText">Who will win American Idol?</span><span class="eventTopPct" id="eventTopPct" style="display:none;"></span></div>
-      <div class="pill brandPill">
-        <img class="viLogo" id="brandLogo" src="https://i.postimg.cc/VkynWsGQ/VI-logo-Dark.png" alt="VegasInsider">
-      </div>
-    </div>
+    @media (max-width:640px){
+      .card{
+        padding:16px 14px 16px;
+        border-radius:18px;
+        box-shadow:0 12px 28px rgba(0,0,0,.32), 0 0 0 1px rgba(255,255,255,.02) inset;
+      }
 
-    <div class="muted" id="meta">Event: KXAMERICANIDOL-26DEC31 • Showing 30 markets</div>
+      .headerRow{
+        flex-direction:column;
+        gap:10px;
+        margin-bottom:4px;
+      }
 
-    <div class="row statsBar" id="statsBar" style="display: flex;">
-      <div class="statTile hasTip" data-tooltip="Volume (Total): all contracts traded since this market opened.">
-        <div class="statLabel" id="volLabel">VOLUME (TOTAL)</div>
-        <div class="statValue" id="statVol">814,379</div>
-      </div>
-      <div class="statTile hasTip" data-tooltip="Volume (24H): contracts traded in the last 24 hours.">
-        <div class="statLabel" id="vol24Label">VOLUME (24H)</div>
-        <div class="statValue" id="statVol24">19,768</div>
-      </div>
-      <div class="statTile hasTip" data-tooltip="Open Interest: contracts currently being held.">
-        <div class="statLabel">OPEN INTEREST</div>
-        <div class="statValue" id="statOI">664,664</div>
-      </div>
-    </div>
+      .eventTopTitle{
+        width:100%;
+        font-size:clamp(23px, 7.2vw, 30px);
+        line-height:1.04;
+      }
 
-    <div class="notionalRow" id="notionalRow" style="display: flex;">
-      <div class="notionalPill hasTip" data-tooltip="Numbers update from the trades endpoint. This split may differ slightly from the headline 24H volume due to timing and rounding.">
-        <span class="notionalLabel" id="notionalLabel">24H Contracts Split (All markets):</span>
-        <span class="notionalYes" id="notionalYes">YES 12,602</span>
-        <span class="notionalSep">•</span>
-        <span class="notionalNo" id="notionalNo">NO 7,143</span>
-      </div>
-    </div>
+      .brandPill{
+        align-self:flex-start;
+        min-height:38px;
+        padding:6px 9px;
+      }
 
-    <div class="legendRow" id="legendRow" style="display: flex;"><div class="legendItem"><span class="dot" style="background:#20c997"></span><span>Hannah Harper</span><span class="legendPct">74%</span></div><div class="legendItem"><span class="dot" style="background:#3b82f6"></span><span>Jordan McCullough</span><span class="legendPct">16%</span></div><div class="legendItem"><span class="dot" style="background:#f97316"></span><span>Keyla Richardson</span><span class="legendPct">10%</span></div></div>
+      .viLogo{
+        height:22px;
+        max-width:145px;
+        padding:5px 10px;
+        border-radius:10px;
+      }
 
-    <div class="chartWrap" id="chartWrap" style="display: block;">
-      <div class="chartHeader">
-        <div class="chartTitle" id="chartTitle"><span>Chance</span><span class="chancePct" id="chancePct" style="display:none;"></span></div>
-        <div class="btnGroup">
-          <button class="btnSmall" data-range="live">LIVE</button>
-          <button class="btnSmall" data-range="1d">1D</button>
-          <button class="btnSmall" data-range="1w">1W</button>
-          <button class="btnSmall" data-range="1m">1M</button>
-          <button class="btnSmall" data-range="1y">1Y</button>
-          <button class="btnSmall active" data-range="all">ALL</button>
-        </div>
-      </div>
-      <div class="chartBox">
-        <canvas id="priceChart" height="576" style="display: block; box-sizing: border-box; height: 384px; width: 954px;" width="1432"></canvas>
-        <div class="chartMetaDark" id="chartMeta"></div>
-      </div>
-    </div>
+      .muted#meta{
+        font-size:13px;
+        margin:10px 0 12px;
+      }
 
-    <div class="grid" id="grid" style="display: none;">
-      <div class="box"><div class="label">YES bid / ask</div><div class="value" id="yesBidAsk">—</div></div>
-      <div class="box"><div class="label">NO bid / ask</div><div class="value" id="noBidAsk">—</div></div>
-      <div class="box"><div class="label">Last price</div><div class="value" id="lastPrice">—</div></div>
-      <div class="box"><div class="label">Volume</div><div class="value" id="volume">—</div></div>
-    </div>
+      .statsBar{
+        flex-direction:column;
+        gap:8px;
+        margin-bottom:10px;
+      }
 
-    <div class="listWrap" id="listWrap" style="display: none;">
-      <div class="listHeader">
-        <div class="listTitle" id="listTitle">Entertainment</div>
-        <div class="row">
-          <span class="tag" id="countTag">Top 5 of 30</span>
-          <button class="smallSelect toggleBtn" id="toggleMarketsBtn" type="button" style="display: inline-block;">Show all</button>
-          <select class="smallSelect" id="sortSelect" data-sharkid="__1">
-            <option value="yes_desc">Sort: YES bid (high → low)</option>
-            <option value="yes_asc">Sort: YES bid (low → high)</option>
-            <option value="vol_desc">Sort: Volume (high → low)</option>
-            <option value="title_asc">Sort: Title (A → Z)</option>
-          </select>
-        </div>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th style="width:42%;">Market</th>
-            <th style="width:18%;">YES (bid/ask)</th>
-            <th style="width:18%;">NO (bid/ask)</th>
-            <th style="width:10%;">Vol</th>
-            <th style="width:12%;">Ticker</th>
-          </tr>
-        </thead>
-        <tbody id="marketsTbody"><tr class="clickable" data-ticker="KXAMERICANIDOL-26DEC31-HAN">
-          <td>Will Hannah Harper win American Idol Season 24 (ABC Season 9)?</td>
-          <td>73¢ / 74¢</td>
-          <td>26¢ / 27¢</td>
-          <td>86819.52</td>
-          <td class="tickerCell">KXAMERICANIDOL-26DEC31-HAN</td>
-        </tr><tr class="clickable" data-ticker="KXAMERICANIDOL-26DEC31-JOR">
-          <td>Will Jordan McCullough win American Idol Season 24 (ABC Season 9)?</td>
-          <td>15¢ / 17¢</td>
-          <td>83¢ / 85¢</td>
-          <td>85510.51</td>
-          <td class="tickerCell">KXAMERICANIDOL-26DEC31-JOR</td>
-        </tr><tr class="clickable" data-ticker="KXAMERICANIDOL-26DEC31-KEY">
-          <td>Will Keyla Richardson win American Idol Season 24 (ABC Season 9)?</td>
-          <td>9¢ / 10¢</td>
-          <td>90¢ / 91¢</td>
-          <td>91492.34</td>
-          <td class="tickerCell">KXAMERICANIDOL-26DEC31-KEY</td>
-        </tr><tr class="clickable" data-ticker="KXAMERICANIDOL-26DEC31-KYN">
-          <td>Will Kyndal Inskeep win American Idol Season 24 (ABC Season 9)?</td>
-          <td>0¢ / 1¢</td>
-          <td>99¢ / 100¢</td>
-          <td>55055.34</td>
-          <td class="tickerCell">KXAMERICANIDOL-26DEC31-KYN</td>
-        </tr><tr class="clickable" data-ticker="KXAMERICANIDOL-26DEC31-MIC">
-          <td>Will Michael Garner win American Idol Season 24 (ABC Season 9)?</td>
-          <td>0¢ / 1¢</td>
-          <td>99¢ / 100¢</td>
-          <td>15</td>
-          <td class="tickerCell">KXAMERICANIDOL-26DEC31-MIC</td>
-        </tr></tbody>
-      </table>
-      <div class="muted">Tip: click any row to update the chart to that market.</div>
-    </div>
+      .statTile{
+        width:100%;
+        flex:0 0 auto;
+        min-height:56px;
+        border-radius:13px;
+        padding:10px 12px;
+      }
 
-    <div class="err" id="error"></div>
-    <div class="debug" id="debugBox" style="display: none;"></div>
-  </div>
+      .statLabel{
+        font-size:11px;
+      }
 
-  <script>
-    const BASE = "https://kalshi-proxy.gmarthandan.workers.dev/api";
+      .statValue{
+        font-size:21px;
+        margin-top:6px;
+      }
+
+      .notionalRow{
+        margin:10px 0 12px;
+      }
+
+      .notionalPill{
+        width:100%;
+        justify-content:center;
+        text-align:center;
+        flex-wrap:wrap;
+        gap:5px 8px;
+        padding:8px 10px;
+        border-radius:20px;
+        font-size:12px;
+      }
+
+      .legendRow{
+        gap:10px 16px;
+        margin:2px 0 10px;
+      }
+
+      .legendItem{
+        font-size:13px;
+        gap:8px;
+      }
+
+      .legendPct{
+        font-size:15px;
+      }
+
+      .chartHeader{
+        grid-template-columns:1fr;
+        justify-items:start;
+        gap:8px;
+        margin-bottom:8px;
+      }
+
+      .chartTitle{
+        font-size:16px;
+      }
+
+      .chartHeader &gt; .btnGroup:first-of-type{
+        justify-self:start;
+        display:flex;
+        width:100%;
+        flex-wrap:wrap;
+        gap:7px;
+      }
+
+      .btnSmall{
+        min-width:46px;
+        padding:7px 11px;
+        font-size:12px;
+      }
+
+      .chartBox{
+        border-radius:18px;
+        padding:14px 10px 12px;
+      }
+
+      canvas{
+        height:255px !important;
+      }
+    }
+
+    @media (max-width:390px){
+      .card{
+        padding:14px 12px;
+        border-radius:16px;
+      }
+      .eventTopTitle{
+        font-size:24px;
+      }
+      .statTile{
+        min-height:58px;
+        padding:10px 12px;
+      }
+      .statValue{
+        font-size:21px;
+      }
+      .notionalPill{
+        font-size:12px;
+      }
+      .legendItem{
+        font-size:12px;
+      }
+      .legendPct{
+        font-size:14px;
+      }
+      .btnSmall{
+        min-width:42px;
+        padding:7px 9px;
+      }
+      canvas{
+        height:250px !important;
+      }
+    }
+  
+
+    /* --- page-safe fit fix override --- */
+    *, *::before, *::after { box-sizing: border-box !important; }
+
+    html, body {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow-x: hidden !important;
+      background: transparent !important;
+    }
+
+    .searchWrap { display: none !important; }
+
+    .card {
+      width: 100% !important;
+      max-width: 720px !important;
+      margin: 0 auto !important;
+      padding: 16px !important;
+      box-sizing: border-box !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      overflow: hidden !important;
+    }
+
+    .headerRow {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start !important;
+      gap: 12px !important;
+      flex-wrap: nowrap !important;
+    }
+
+    .eventTopTitle {
+      min-width: 0 !important;
+      max-width: 100% !important;
+      width: auto !important;
+      overflow-wrap: anywhere;
+    }
+
+    .brandPill {
+      max-width: 100% !important;
+      justify-self: end;
+      box-sizing: border-box !important;
+    }
+
+    .viLogo {
+      display: block !important;
+      max-width: 100% !important;
+      height: 24px !important;
+      width: auto !important;
+      object-fit: contain !important;
+    }
+
+    .statsBar {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 10px !important;
+      width: 100% !important;
+    }
+
+    .statTile,
+    .notionalPill,
+    .chartBox,
+    .btnSmall {
+      box-sizing: border-box !important;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .statTile {
+      min-width: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .notionalPill,
+    .brandPill,
+    .btnSmall,
+    .chartBox,
+    .viLogo {
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .legendRow {
+      width: 100% !important;
+      gap: 8px 16px !important;
+      align-items: center !important;
+    }
+
+    .legendItem {
+      min-width: 0 !important;
+      max-width: 100% !important;
+    }
+
+    .chartHeader {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      gap: 10px !important;
+    }
+
+    .chartTitle {
+      flex: 1 1 100% !important;
+      min-width: 0 !important;
+    }
+
+    .chartHeader &gt; .btnGroup:first-of-type {
+      justify-self: auto !important;
+      width: auto !important;
+      flex: 0 1 auto !important;
+    }
+
+    .btnGroup {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+      max-width: 100% !important;
+    }
+
+    .btnSmall {
+      width: auto !important;
+      min-width: 52px !important;
+      padding: 7px 12px !important;
+    }
+
+    .chartBox { padding: 12px 10px 10px !important; }
+    canvas { width: 100% !important; height: 300px !important; }
+
+    @media (max-width: 640px) {
+      .card { padding: 14px !important; }
+      .headerRow {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+      }
+      .brandPill { justify-self: start; }
+      .statsBar { grid-template-columns: 1fr !important; }
+      .eventTopTitle {
+        font-size: clamp(23px, 7vw, 30px) !important;
+        line-height: 1.04 !important;
+      }
+      .legendRow { gap: 8px 14px !important; }
+      .legendItem { font-size: 13px !important; }
+      .btnSmall {
+        min-width: 46px !important;
+        padding: 7px 10px !important;
+      }
+      canvas { height: 255px !important; }
+    }
+
+
+    /* --- constrained tooltip fix --- */
+    .hasTip{
+      position:relative !important;
+    }
+
+    .hasTip::after{
+      left:12px !important;
+      right:auto !important;
+      top:100% !important;
+      margin-top:8px !important;
+      transform:none !important;
+      min-width:0 !important;
+      width:max-content !important;
+      max-width:min(330px, calc(100vw - 44px)) !important;
+      white-space:normal !important;
+      overflow-wrap:anywhere !important;
+      z-index:2000 !important;
+      box-sizing:border-box !important;
+    }
+
+    .hasTip::before{
+      left:26px !important;
+      right:auto !important;
+      top:100% !important;
+      margin-top:2px !important;
+      transform:rotate(45deg) !important;
+      z-index:2001 !important;
+    }
+
+    .statTile.hasTip:nth-child(3)::after{
+      left:auto !important;
+      right:12px !important;
+      max-width:min(330px, calc(100vw - 44px)) !important;
+    }
+
+    .statTile.hasTip:nth-child(3)::before{
+      left:auto !important;
+      right:34px !important;
+    }
+
+    @media (max-width:640px){
+      .hasTip::after,
+      .statTile.hasTip:nth-child(3)::after{
+        left:10px !important;
+        right:auto !important;
+        width:calc(100vw - 48px) !important;
+        max-width:calc(100vw - 48px) !important;
+      }
+      .hasTip::before,
+      .statTile.hasTip:nth-child(3)::before{
+        left:28px !important;
+        right:auto !important;
+      }
+    }
+
+&lt;/style&gt;
+&lt;style data-emotion=&quot;css&quot; data-s=&quot;&quot;&gt;&lt;/style&gt;&lt;style&gt;#searchWrap{display:none !important;} html,body{padding:0 !important;margin:0 !important;background:transparent !important;}&lt;/style&gt;&lt;script&gt;window.__KALSHI_EMBED__ = {&quot;exportMode&quot;:true,&quot;brand&quot;:&quot;vegasinsider&quot;,&quot;theme&quot;:&quot;dark&quot;,&quot;range&quot;:&quot;all&quot;,&quot;eventChartMode&quot;:&quot;default&quot;,&quot;selectedEventMarketTicker&quot;:null,&quot;marketTicker&quot;:null,&quot;eventTicker&quot;:&quot;KXAMERICANIDOL-26DEC31&quot;};&lt;/script&gt;&lt;/head&gt;
+&lt;body cz-shortcut-listen=&quot;true&quot;&gt;
+  &lt;div class=&quot;searchWrap&quot; id=&quot;searchWrap&quot; style=&quot;display: block;&quot;&gt;
+    &lt;div class=&quot;searchInner&quot;&gt;
+      &lt;div class=&quot;searchTitleRow&quot;&gt;
+        &lt;div class=&quot;searchTitle&quot; id=&quot;title&quot;&gt;Enter a market ticker or event ticker&lt;/div&gt;
+        &lt;button class=&quot;miniBtn&quot; id=&quot;themeBtn&quot; type=&quot;button&quot;&gt;Theme&lt;/button&gt;
+        &lt;div class=&quot;ddWrap&quot; id=&quot;brandDD&quot;&gt;
+          &lt;button class=&quot;miniBtn&quot; id=&quot;brandBtn&quot; type=&quot;button&quot; aria-haspopup=&quot;menu&quot; aria-expanded=&quot;false&quot;&gt;Brand ▾&lt;/button&gt;
+          &lt;div id=&quot;brandMenu&quot; class=&quot;brandMenu hidden&quot; role=&quot;menu&quot; aria-label=&quot;Brand Menu&quot;&gt;
+            &lt;button type=&quot;button&quot; class=&quot;brandOpt&quot; data-brand=&quot;vegasinsider&quot;&gt;VegasInsider&lt;/button&gt;
+            &lt;button type=&quot;button&quot; class=&quot;brandOpt&quot; data-brand=&quot;actionnetwork&quot;&gt;Action Network&lt;/button&gt;
+            &lt;button type=&quot;button&quot; class=&quot;brandOpt&quot; data-brand=&quot;canadasb&quot;&gt;Canada Sports Betting&lt;/button&gt;
+            &lt;button type=&quot;button&quot; class=&quot;brandOpt&quot; data-brand=&quot;rotogrinders&quot;&gt;RotoGrinders&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;ddWrap&quot; id=&quot;htmlDD&quot;&gt;
+          &lt;button class=&quot;miniBtn&quot; id=&quot;downloadHtmlBtn&quot; type=&quot;button&quot; aria-haspopup=&quot;menu&quot; aria-expanded=&quot;false&quot;&gt;HTML ▾&lt;/button&gt;
+          &lt;div id=&quot;htmlMenu&quot; class=&quot;htmlMenu hidden&quot; role=&quot;menu&quot; aria-label=&quot;HTML Menu&quot;&gt;
+            &lt;button type=&quot;button&quot; class=&quot;htmlOpt&quot; id=&quot;htmlDownloadOpt&quot;&gt;Download locked HTML&lt;/button&gt;
+            &lt;button type=&quot;button&quot; class=&quot;htmlOpt&quot; id=&quot;htmlCopyOpt&quot;&gt;Copy locked HTML&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;row searchInputRow&quot;&gt;
+        &lt;div&gt;
+          &lt;input id=&quot;inputBox&quot; placeholder=&quot;Market ticker OR event ticker (e.g. KXMARMAD-26 or KXFEDCHAIRNOM-29)&quot; data-sharkid=&quot;__0&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;loadWrap&quot;&gt;
+          &lt;button id=&quot;loadBtn&quot;&gt;Load&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;searchHint&quot;&gt;Paste a Kalshi market ticker or event ticker from the end of the URL.&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;card&quot; id=&quot;widgetCard&quot; style=&quot;--brand-accent: #F2C23A; --brand-accent-2: #D9A72A; --brand-accent-rgb: 242,194,58; display: block;&quot;&gt;
+    &lt;div class=&quot;row headerRow&quot;&gt;
+      &lt;div class=&quot;eventTopTitle&quot; id=&quot;eventTopTitle&quot; style=&quot;display: flex;&quot;&gt;&lt;span id=&quot;eventTopTitleText&quot;&gt;Who will win American Idol?&lt;/span&gt;&lt;span class=&quot;eventTopPct&quot; id=&quot;eventTopPct&quot; style=&quot;display:none;&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;pill brandPill&quot;&gt;
+        &lt;img class=&quot;viLogo&quot; id=&quot;brandLogo&quot; src=&quot;https://i.postimg.cc/VkynWsGQ/VI-logo-Dark.png&quot; alt=&quot;VegasInsider&quot;&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;muted&quot; id=&quot;meta&quot;&gt;Event: KXAMERICANIDOL-26DEC31 • Showing 30 markets&lt;/div&gt;
+
+    &lt;div class=&quot;row statsBar&quot; id=&quot;statsBar&quot; style=&quot;display: flex;&quot;&gt;
+      &lt;div class=&quot;statTile hasTip&quot; data-tooltip=&quot;Volume (Total): all contracts traded since this market opened.&quot;&gt;
+        &lt;div class=&quot;statLabel&quot; id=&quot;volLabel&quot;&gt;VOLUME (TOTAL)&lt;/div&gt;
+        &lt;div class=&quot;statValue&quot; id=&quot;statVol&quot;&gt;814,379&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;statTile hasTip&quot; data-tooltip=&quot;Volume (24H): contracts traded in the last 24 hours.&quot;&gt;
+        &lt;div class=&quot;statLabel&quot; id=&quot;vol24Label&quot;&gt;VOLUME (24H)&lt;/div&gt;
+        &lt;div class=&quot;statValue&quot; id=&quot;statVol24&quot;&gt;19,768&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;statTile hasTip&quot; data-tooltip=&quot;Open Interest: contracts currently being held.&quot;&gt;
+        &lt;div class=&quot;statLabel&quot;&gt;OPEN INTEREST&lt;/div&gt;
+        &lt;div class=&quot;statValue&quot; id=&quot;statOI&quot;&gt;664,664&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;notionalRow&quot; id=&quot;notionalRow&quot; style=&quot;display: flex;&quot;&gt;
+      &lt;div class=&quot;notionalPill hasTip&quot; data-tooltip=&quot;Numbers update from the trades endpoint. This split may differ slightly from the headline 24H volume due to timing and rounding.&quot;&gt;
+        &lt;span class=&quot;notionalLabel&quot; id=&quot;notionalLabel&quot;&gt;24H Contracts Split (All markets):&lt;/span&gt;
+        &lt;span class=&quot;notionalYes&quot; id=&quot;notionalYes&quot;&gt;YES 12,602&lt;/span&gt;
+        &lt;span class=&quot;notionalSep&quot;&gt;•&lt;/span&gt;
+        &lt;span class=&quot;notionalNo&quot; id=&quot;notionalNo&quot;&gt;NO 7,143&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;legendRow&quot; id=&quot;legendRow&quot; style=&quot;display: flex;&quot;&gt;&lt;div class=&quot;legendItem&quot;&gt;&lt;span class=&quot;dot&quot; style=&quot;background:#20c997&quot;&gt;&lt;/span&gt;&lt;span&gt;Hannah Harper&lt;/span&gt;&lt;span class=&quot;legendPct&quot;&gt;74%&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;legendItem&quot;&gt;&lt;span class=&quot;dot&quot; style=&quot;background:#3b82f6&quot;&gt;&lt;/span&gt;&lt;span&gt;Jordan McCullough&lt;/span&gt;&lt;span class=&quot;legendPct&quot;&gt;16%&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;legendItem&quot;&gt;&lt;span class=&quot;dot&quot; style=&quot;background:#f97316&quot;&gt;&lt;/span&gt;&lt;span&gt;Keyla Richardson&lt;/span&gt;&lt;span class=&quot;legendPct&quot;&gt;10%&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;
+
+    &lt;div class=&quot;chartWrap&quot; id=&quot;chartWrap&quot; style=&quot;display: block;&quot;&gt;
+      &lt;div class=&quot;chartHeader&quot;&gt;
+        &lt;div class=&quot;chartTitle&quot; id=&quot;chartTitle&quot;&gt;&lt;span&gt;Chance&lt;/span&gt;&lt;span class=&quot;chancePct&quot; id=&quot;chancePct&quot; style=&quot;display:none;&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+        &lt;div class=&quot;btnGroup&quot;&gt;
+          &lt;button class=&quot;btnSmall&quot; data-range=&quot;live&quot;&gt;LIVE&lt;/button&gt;
+          &lt;button class=&quot;btnSmall&quot; data-range=&quot;1d&quot;&gt;1D&lt;/button&gt;
+          &lt;button class=&quot;btnSmall&quot; data-range=&quot;1w&quot;&gt;1W&lt;/button&gt;
+          &lt;button class=&quot;btnSmall&quot; data-range=&quot;1m&quot;&gt;1M&lt;/button&gt;
+          &lt;button class=&quot;btnSmall&quot; data-range=&quot;1y&quot;&gt;1Y&lt;/button&gt;
+          &lt;button class=&quot;btnSmall active&quot; data-range=&quot;all&quot;&gt;ALL&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;chartBox&quot;&gt;
+        &lt;canvas id=&quot;priceChart&quot; height=&quot;576&quot; style=&quot;display: block; box-sizing: border-box; height: 384px; width: 954px;&quot; width=&quot;1432&quot;&gt;&lt;/canvas&gt;
+        &lt;div class=&quot;chartMetaDark&quot; id=&quot;chartMeta&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;grid&quot; id=&quot;grid&quot; style=&quot;display: none;&quot;&gt;
+      &lt;div class=&quot;box&quot;&gt;&lt;div class=&quot;label&quot;&gt;YES bid / ask&lt;/div&gt;&lt;div class=&quot;value&quot; id=&quot;yesBidAsk&quot;&gt;—&lt;/div&gt;&lt;/div&gt;
+      &lt;div class=&quot;box&quot;&gt;&lt;div class=&quot;label&quot;&gt;NO bid / ask&lt;/div&gt;&lt;div class=&quot;value&quot; id=&quot;noBidAsk&quot;&gt;—&lt;/div&gt;&lt;/div&gt;
+      &lt;div class=&quot;box&quot;&gt;&lt;div class=&quot;label&quot;&gt;Last price&lt;/div&gt;&lt;div class=&quot;value&quot; id=&quot;lastPrice&quot;&gt;—&lt;/div&gt;&lt;/div&gt;
+      &lt;div class=&quot;box&quot;&gt;&lt;div class=&quot;label&quot;&gt;Volume&lt;/div&gt;&lt;div class=&quot;value&quot; id=&quot;volume&quot;&gt;—&lt;/div&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;listWrap&quot; id=&quot;listWrap&quot; style=&quot;display: none;&quot;&gt;
+      &lt;div class=&quot;listHeader&quot;&gt;
+        &lt;div class=&quot;listTitle&quot; id=&quot;listTitle&quot;&gt;Entertainment&lt;/div&gt;
+        &lt;div class=&quot;row&quot;&gt;
+          &lt;span class=&quot;tag&quot; id=&quot;countTag&quot;&gt;Top 5 of 30&lt;/span&gt;
+          &lt;button class=&quot;smallSelect toggleBtn&quot; id=&quot;toggleMarketsBtn&quot; type=&quot;button&quot; style=&quot;display: inline-block;&quot;&gt;Show all&lt;/button&gt;
+          &lt;select class=&quot;smallSelect&quot; id=&quot;sortSelect&quot; data-sharkid=&quot;__1&quot;&gt;
+            &lt;option value=&quot;yes_desc&quot;&gt;Sort: YES bid (high → low)&lt;/option&gt;
+            &lt;option value=&quot;yes_asc&quot;&gt;Sort: YES bid (low → high)&lt;/option&gt;
+            &lt;option value=&quot;vol_desc&quot;&gt;Sort: Volume (high → low)&lt;/option&gt;
+            &lt;option value=&quot;title_asc&quot;&gt;Sort: Title (A → Z)&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;table&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            &lt;th style=&quot;width:42%;&quot;&gt;Market&lt;/th&gt;
+            &lt;th style=&quot;width:18%;&quot;&gt;YES (bid/ask)&lt;/th&gt;
+            &lt;th style=&quot;width:18%;&quot;&gt;NO (bid/ask)&lt;/th&gt;
+            &lt;th style=&quot;width:10%;&quot;&gt;Vol&lt;/th&gt;
+            &lt;th style=&quot;width:12%;&quot;&gt;Ticker&lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody id=&quot;marketsTbody&quot;&gt;&lt;tr class=&quot;clickable&quot; data-ticker=&quot;KXAMERICANIDOL-26DEC31-HAN&quot;&gt;
+          &lt;td&gt;Will Hannah Harper win American Idol Season 24 (ABC Season 9)?&lt;/td&gt;
+          &lt;td&gt;73¢ / 74¢&lt;/td&gt;
+          &lt;td&gt;26¢ / 27¢&lt;/td&gt;
+          &lt;td&gt;86819.52&lt;/td&gt;
+          &lt;td class=&quot;tickerCell&quot;&gt;KXAMERICANIDOL-26DEC31-HAN&lt;/td&gt;
+        &lt;/tr&gt;&lt;tr class=&quot;clickable&quot; data-ticker=&quot;KXAMERICANIDOL-26DEC31-JOR&quot;&gt;
+          &lt;td&gt;Will Jordan McCullough win American Idol Season 24 (ABC Season 9)?&lt;/td&gt;
+          &lt;td&gt;15¢ / 17¢&lt;/td&gt;
+          &lt;td&gt;83¢ / 85¢&lt;/td&gt;
+          &lt;td&gt;85510.51&lt;/td&gt;
+          &lt;td class=&quot;tickerCell&quot;&gt;KXAMERICANIDOL-26DEC31-JOR&lt;/td&gt;
+        &lt;/tr&gt;&lt;tr class=&quot;clickable&quot; data-ticker=&quot;KXAMERICANIDOL-26DEC31-KEY&quot;&gt;
+          &lt;td&gt;Will Keyla Richardson win American Idol Season 24 (ABC Season 9)?&lt;/td&gt;
+          &lt;td&gt;9¢ / 10¢&lt;/td&gt;
+          &lt;td&gt;90¢ / 91¢&lt;/td&gt;
+          &lt;td&gt;91492.34&lt;/td&gt;
+          &lt;td class=&quot;tickerCell&quot;&gt;KXAMERICANIDOL-26DEC31-KEY&lt;/td&gt;
+        &lt;/tr&gt;&lt;tr class=&quot;clickable&quot; data-ticker=&quot;KXAMERICANIDOL-26DEC31-KYN&quot;&gt;
+          &lt;td&gt;Will Kyndal Inskeep win American Idol Season 24 (ABC Season 9)?&lt;/td&gt;
+          &lt;td&gt;0¢ / 1¢&lt;/td&gt;
+          &lt;td&gt;99¢ / 100¢&lt;/td&gt;
+          &lt;td&gt;55055.34&lt;/td&gt;
+          &lt;td class=&quot;tickerCell&quot;&gt;KXAMERICANIDOL-26DEC31-KYN&lt;/td&gt;
+        &lt;/tr&gt;&lt;tr class=&quot;clickable&quot; data-ticker=&quot;KXAMERICANIDOL-26DEC31-MIC&quot;&gt;
+          &lt;td&gt;Will Michael Garner win American Idol Season 24 (ABC Season 9)?&lt;/td&gt;
+          &lt;td&gt;0¢ / 1¢&lt;/td&gt;
+          &lt;td&gt;99¢ / 100¢&lt;/td&gt;
+          &lt;td&gt;15&lt;/td&gt;
+          &lt;td class=&quot;tickerCell&quot;&gt;KXAMERICANIDOL-26DEC31-MIC&lt;/td&gt;
+        &lt;/tr&gt;&lt;/tbody&gt;
+      &lt;/table&gt;
+      &lt;div class=&quot;muted&quot;&gt;Tip: click any row to update the chart to that market.&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;err&quot; id=&quot;error&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;debug&quot; id=&quot;debugBox&quot; style=&quot;display: none;&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    const BASE = &quot;https://kalshi-proxy.gmarthandan.workers.dev/api&quot;;
     const params = new URLSearchParams(location.search);
-    const DEBUG = params.get("debug") === "1";
-    const EMBED_CONFIG = (window.__KALSHI_EMBED__ && typeof window.__KALSHI_EMBED__ === "object") ? window.__KALSHI_EMBED__ : null;
-    const IS_LOCKED_EXPORT = !!(EMBED_CONFIG && EMBED_CONFIG.exportMode);
+    const DEBUG = params.get(&quot;debug&quot;) === &quot;1&quot;;
+    const EMBED_CONFIG = (window.__KALSHI_EMBED__ &amp;&amp; typeof window.__KALSHI_EMBED__ === &quot;object&quot;) ? window.__KALSHI_EMBED__ : null;
+    const IS_LOCKED_EXPORT = !!(EMBED_CONFIG &amp;&amp; EMBED_CONFIG.exportMode);
     const AUTO_REFRESH_MINUTES = 30;
     const AUTO_REFRESH_MS = AUTO_REFRESH_MINUTES * 60 * 1000;
     const MAX_MARKETS_COLLAPSED = 5;
 
     const BRAND_PRESETS = {
-      vegasinsider: { name: "VegasInsider", accent: "#F2C23A", accent2: "#D9A72A", rgb: "242,194,58", logo: "https://i.postimg.cc/VkynWsGQ/VI-logo-Dark.png" },
-      actionnetwork: { name: "Action Network", accent: "#00C853", accent2: "#00A947", rgb: "0,200,83", logo: "https://i.postimg.cc/x1nG117r/AN-final2-logo.png" },
-      canadasb: { name: "Canada Sports Betting", accent: "#EF4444", accent2: "#DC2626", rgb: "239,68,68", logo: "https://i.postimg.cc/25nqwgcw/csb-text-all-red.png" },
-      rotogrinders: { name: "RotoGrinders", accent: "#2F7DF3", accent2: "#0159D1", rgb: "47,125,243", logo: "https://i.postimg.cc/PrcJnQtK/RG-logo-Fn.png" }
+      vegasinsider: { name: &quot;VegasInsider&quot;, accent: &quot;#F2C23A&quot;, accent2: &quot;#D9A72A&quot;, rgb: &quot;242,194,58&quot;, logo: &quot;https://i.postimg.cc/VkynWsGQ/VI-logo-Dark.png&quot; },
+      actionnetwork: { name: &quot;Action Network&quot;, accent: &quot;#00C853&quot;, accent2: &quot;#00A947&quot;, rgb: &quot;0,200,83&quot;, logo: &quot;https://i.postimg.cc/x1nG117r/AN-final2-logo.png&quot; },
+      canadasb: { name: &quot;Canada Sports Betting&quot;, accent: &quot;#EF4444&quot;, accent2: &quot;#DC2626&quot;, rgb: &quot;239,68,68&quot;, logo: &quot;https://i.postimg.cc/25nqwgcw/csb-text-all-red.png&quot; },
+      rotogrinders: { name: &quot;RotoGrinders&quot;, accent: &quot;#2F7DF3&quot;, accent2: &quot;#0159D1&quot;, rgb: &quot;47,125,243&quot;, logo: &quot;https://i.postimg.cc/PrcJnQtK/RG-logo-Fn.png&quot; }
     };
 
-    const el = (id) => document.getElementById(id);
-    const titleEl = el("title");
-    const widgetCardEl = el("widgetCard");
-    const searchWrapEl = el("searchWrap");
-    const inputBox = el("inputBox");
-    const metaEl = el("meta");
-    const errEl = el("error");
-    const debugBox = el("debugBox");
-    const gridEl = el("grid");
-    const yesBidAskEl = el("yesBidAsk");
-    const noBidAskEl = el("noBidAsk");
-    const lastPriceEl = el("lastPrice");
-    const volumeEl = el("volume");
-    const eventTopTitleEl = el("eventTopTitle");
-    const eventTopTitleTextEl = el("eventTopTitleText");
-    const eventTopPctEl = el("eventTopPct");
-    const chancePctEl = el("chancePct");
-    const statsBar = el("statsBar");
-    const volLabel = el("volLabel");
-    const vol24Label = el("vol24Label");
-    const statVol = el("statVol");
-    const statVol24 = el("statVol24");
-    const statOI = el("statOI");
-    const notionalRow = el("notionalRow");
-    const notionalLabelEl = el("notionalLabel");
-    const notionalYesEl = el("notionalYes");
-    const notionalNoEl = el("notionalNo");
-    const chartWrap = el("chartWrap");
-    const chartMeta = el("chartMeta");
-    const legendRow = el("legendRow");
-    const listWrap = el("listWrap");
-    const listTitle = el("listTitle");
-    const countTag = el("countTag");
-    const marketsTbody = el("marketsTbody");
-    const sortSelect = el("sortSelect");
-    const toggleMarketsBtn = el("toggleMarketsBtn");
-    const brandLogo = el("brandLogo");
+    const el = (id) =&gt; document.getElementById(id);
+    const titleEl = el(&quot;title&quot;);
+    const widgetCardEl = el(&quot;widgetCard&quot;);
+    const searchWrapEl = el(&quot;searchWrap&quot;);
+    const inputBox = el(&quot;inputBox&quot;);
+    const metaEl = el(&quot;meta&quot;);
+    const errEl = el(&quot;error&quot;);
+    const debugBox = el(&quot;debugBox&quot;);
+    const gridEl = el(&quot;grid&quot;);
+    const yesBidAskEl = el(&quot;yesBidAsk&quot;);
+    const noBidAskEl = el(&quot;noBidAsk&quot;);
+    const lastPriceEl = el(&quot;lastPrice&quot;);
+    const volumeEl = el(&quot;volume&quot;);
+    const eventTopTitleEl = el(&quot;eventTopTitle&quot;);
+    const eventTopTitleTextEl = el(&quot;eventTopTitleText&quot;);
+    const eventTopPctEl = el(&quot;eventTopPct&quot;);
+    const chancePctEl = el(&quot;chancePct&quot;);
+    const statsBar = el(&quot;statsBar&quot;);
+    const volLabel = el(&quot;volLabel&quot;);
+    const vol24Label = el(&quot;vol24Label&quot;);
+    const statVol = el(&quot;statVol&quot;);
+    const statVol24 = el(&quot;statVol24&quot;);
+    const statOI = el(&quot;statOI&quot;);
+    const notionalRow = el(&quot;notionalRow&quot;);
+    const notionalLabelEl = el(&quot;notionalLabel&quot;);
+    const notionalYesEl = el(&quot;notionalYes&quot;);
+    const notionalNoEl = el(&quot;notionalNo&quot;);
+    const chartWrap = el(&quot;chartWrap&quot;);
+    const chartMeta = el(&quot;chartMeta&quot;);
+    const legendRow = el(&quot;legendRow&quot;);
+    const listWrap = el(&quot;listWrap&quot;);
+    const listTitle = el(&quot;listTitle&quot;);
+    const countTag = el(&quot;countTag&quot;);
+    const marketsTbody = el(&quot;marketsTbody&quot;);
+    const sortSelect = el(&quot;sortSelect&quot;);
+    const toggleMarketsBtn = el(&quot;toggleMarketsBtn&quot;);
+    const brandLogo = el(&quot;brandLogo&quot;);
 
-    let currentBrandKey = "vegasinsider";
+    let currentBrandKey = &quot;vegasinsider&quot;;
 
     let chart = null;
     let activeMode = null; // market | event
     let activeMarketTicker = null;
     let activeEventTicker = null;
     let activeEventSection = null;
-    let activeRange = "1d";
-    let eventChartMode = "default"; // default | selected
+    let activeRange = &quot;1d&quot;;
+    let eventChartMode = &quot;default&quot;; // default | selected
     let selectedEventMarketTicker = null;
     let lastEventMarkets = [];
     let lastEventTotals = null;
@@ -640,12 +1125,12 @@
 
     function setDebug(obj) {
       if (!DEBUG) return;
-      debugBox.style.display = "block";
+      debugBox.style.display = &quot;block&quot;;
       debugBox.textContent = JSON.stringify(obj, null, 2);
     }
 
     function n(x) {
-      if (x === null || x === undefined || x === "") return null;
+      if (x === null || x === undefined || x === &quot;&quot;) return null;
       const v = Number(x);
       return Number.isFinite(v) ? v : null;
     }
@@ -668,12 +1153,12 @@
 
     function fmtCentsOrNull(x) {
       const v = n(x);
-      return v === null ? "—" : `${Math.round(v)}¢`;
+      return v === null ? &quot;—&quot; : `${Math.round(v)}¢`;
     }
 
     function formatInt(x) {
       const v = n(x);
-      return v === null ? "—" : Math.round(v).toLocaleString();
+      return v === null ? &quot;—&quot; : Math.round(v).toLocaleString();
     }
 
     function formatContracts(x) {
@@ -681,33 +1166,35 @@
     }
 
     function escapeHtml(value) {
-      return String(value ?? "").replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+      return String(value ?? &quot;&quot;).replace(/[&amp;&lt;&gt;&quot;]/g, (ch) =&gt; ({ &quot;&amp;&quot;: &quot;&amp;amp;&quot;, &quot;&lt;&quot;: &quot;&amp;lt;&quot;, &quot;&gt;&quot;: &quot;&amp;gt;&quot;, &#x27;&quot;&#x27;: &quot;&amp;quot;&quot; }[ch]));
     }
 
     function formatUSD(x) {
       const v = n(x);
-      return v === null ? "—" : v.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+      return v === null ? &quot;—&quot; : v.toLocaleString(undefined, { style: &quot;currency&quot;, currency: &quot;USD&quot;, maximumFractionDigits: 0 });
     }
 
     function applyLockedExportChrome() {
       if (!IS_LOCKED_EXPORT) return;
-      if (searchWrapEl) searchWrapEl.style.display = "none";
-      document.body.style.padding = "0";
+      if (searchWrapEl) searchWrapEl.style.display = &quot;none&quot;;
+      document.documentElement.style.background = &quot;transparent&quot;;
+      document.body.style.background = &quot;transparent&quot;;
+      document.body.style.padding = &quot;0&quot;;
     }
 
     function showWidget() {
-      widgetCardEl.style.display = "block";
-      searchWrapEl.style.display = IS_LOCKED_EXPORT ? "none" : "block";
+      widgetCardEl.style.display = &quot;block&quot;;
+      searchWrapEl.style.display = IS_LOCKED_EXPORT ? &quot;none&quot; : &quot;block&quot;;
     }
 
     function hideWidget() {
-      widgetCardEl.style.display = "none";
-      searchWrapEl.style.display = IS_LOCKED_EXPORT ? "none" : "block";
+      widgetCardEl.style.display = &quot;none&quot;;
+      searchWrapEl.style.display = IS_LOCKED_EXPORT ? &quot;none&quot; : &quot;block&quot;;
     }
 
     function hardDestroyChart() {
-      const canvas = el("priceChart");
-      const existing = (typeof Chart !== "undefined" && Chart.getChart) ? Chart.getChart(canvas) : null;
+      const canvas = el(&quot;priceChart&quot;);
+      const existing = (typeof Chart !== &quot;undefined&quot; &amp;&amp; Chart.getChart) ? Chart.getChart(canvas) : null;
       if (existing) {
         try { existing.destroy(); } catch (_) {}
       }
@@ -716,51 +1203,51 @@
       }
       chart = null;
       if (canvas) {
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext(&quot;2d&quot;);
         if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
     }
 
     function clearUI() {
-      errEl.textContent = "";
-      debugBox.style.display = "none";
-      debugBox.textContent = "";
-      metaEl.textContent = "";
-      gridEl.style.display = "none";
-      statsBar.style.display = "none";
-      notionalRow.style.display = "none";
-      chartWrap.style.display = "none";
-      chartMeta.textContent = "";
-      legendRow.style.display = "none";
-      legendRow.innerHTML = "";
-      listWrap.style.display = "none";
-      marketsTbody.innerHTML = "";
-      eventTopTitleEl.style.display = "none";
-      eventTopTitleTextEl.textContent = "";
-      eventTopPctEl.textContent = "";
-      eventTopPctEl.style.display = "none";
-      chancePctEl.textContent = "";
-      chancePctEl.style.display = "none";
-      volLabel.textContent = "VOLUME (TOTAL)";
-      vol24Label.textContent = "VOLUME (24H)";
-      statVol.textContent = "—";
-      statVol24.textContent = "—";
-      statOI.textContent = "—";
-      notionalLabelEl.textContent = "24H Contracts Split:";
-      notionalYesEl.textContent = "YES —";
-      notionalNoEl.textContent = "NO —";
+      errEl.textContent = &quot;&quot;;
+      debugBox.style.display = &quot;none&quot;;
+      debugBox.textContent = &quot;&quot;;
+      metaEl.textContent = &quot;&quot;;
+      gridEl.style.display = &quot;none&quot;;
+      statsBar.style.display = &quot;none&quot;;
+      notionalRow.style.display = &quot;none&quot;;
+      chartWrap.style.display = &quot;none&quot;;
+      chartMeta.textContent = &quot;&quot;;
+      legendRow.style.display = &quot;none&quot;;
+      legendRow.innerHTML = &quot;&quot;;
+      listWrap.style.display = &quot;none&quot;;
+      marketsTbody.innerHTML = &quot;&quot;;
+      eventTopTitleEl.style.display = &quot;none&quot;;
+      eventTopTitleTextEl.textContent = &quot;&quot;;
+      eventTopPctEl.textContent = &quot;&quot;;
+      eventTopPctEl.style.display = &quot;none&quot;;
+      chancePctEl.textContent = &quot;&quot;;
+      chancePctEl.style.display = &quot;none&quot;;
+      volLabel.textContent = &quot;VOLUME (TOTAL)&quot;;
+      vol24Label.textContent = &quot;VOLUME (24H)&quot;;
+      statVol.textContent = &quot;—&quot;;
+      statVol24.textContent = &quot;—&quot;;
+      statOI.textContent = &quot;—&quot;;
+      notionalLabelEl.textContent = &quot;24H Contracts Split:&quot;;
+      notionalYesEl.textContent = &quot;YES —&quot;;
+      notionalNoEl.textContent = &quot;NO —&quot;;
       activeMode = null;
       activeMarketTicker = null;
       activeEventTicker = null;
       activeEventSection = null;
       selectedEventMarketTicker = null;
-      eventChartMode = "default";
+      eventChartMode = &quot;default&quot;;
       lastEventMarkets = [];
       lastEventTotals = null;
       marketsExpanded = false;
-      toggleMarketsBtn.style.display = "none";
-      toggleMarketsBtn.textContent = "Show all";
-      toggleMarketsBtn.classList.remove("isExpanded");
+      toggleMarketsBtn.style.display = &quot;none&quot;;
+      toggleMarketsBtn.textContent = &quot;Show all&quot;;
+      toggleMarketsBtn.classList.remove(&quot;isExpanded&quot;);
       tickerToName.clear();
       hardDestroyChart();
       updateSelectedModeAvailability();
@@ -768,12 +1255,12 @@
     }
 
     async function fetchJSON(url) {
-      const res = await fetch(url, { headers: { Accept: "application/json" } });
+      const res = await fetch(url, { headers: { Accept: &quot;application/json&quot; } });
       if (!res.ok) {
-        let extra = "";
+        let extra = &quot;&quot;;
         try {
           const j = await res.json();
-          extra = j?.error?.message ? ` — ${j.error.message}` : j?.error ? ` — ${JSON.stringify(j.error)}` : "";
+          extra = j?.error?.message ? ` — ${j.error.message}` : j?.error ? ` — ${JSON.stringify(j.error)}` : &quot;&quot;;
           setDebug(j);
         } catch (_) {}
         throw new Error(`HTTP ${res.status}${extra}`);
@@ -784,25 +1271,25 @@
     function pickFirstString(obj, keys) {
       for (const k of keys) {
         const v = obj?.[k];
-        if (typeof v === "string" && v.trim()) return v.trim();
+        if (typeof v === &quot;string&quot; &amp;&amp; v.trim()) return v.trim();
       }
       return null;
     }
 
     function buildEventSection(ev) {
       const category =
-        pickFirstString(ev, ["category_title", "category", "category_name"]) ||
-        pickFirstString(ev?.category, ["title", "name"]) ||
-        (Array.isArray(ev?.categories) ? pickFirstString(ev.categories[0], ["title", "name"]) : null);
+        pickFirstString(ev, [&quot;category_title&quot;, &quot;category&quot;, &quot;category_name&quot;]) ||
+        pickFirstString(ev?.category, [&quot;title&quot;, &quot;name&quot;]) ||
+        (Array.isArray(ev?.categories) ? pickFirstString(ev.categories[0], [&quot;title&quot;, &quot;name&quot;]) : null);
 
       const topic =
-        pickFirstString(ev, ["series_title", "series", "topic", "subcategory_title", "subtitle"]) ||
-        pickFirstString(ev?.series, ["title", "name"]) ||
+        pickFirstString(ev, [&quot;series_title&quot;, &quot;series&quot;, &quot;topic&quot;, &quot;subcategory_title&quot;, &quot;subtitle&quot;]) ||
+        pickFirstString(ev?.series, [&quot;title&quot;, &quot;name&quot;]) ||
         (Array.isArray(ev?.tags)
-          ? (typeof ev.tags[0] === "string" ? ev.tags[0] : pickFirstString(ev.tags[0], ["title", "name"]))
+          ? (typeof ev.tags[0] === &quot;string&quot; ? ev.tags[0] : pickFirstString(ev.tags[0], [&quot;title&quot;, &quot;name&quot;]))
           : null);
 
-      if (category && topic) return `${category} · ${topic}`;
+      if (category &amp;&amp; topic) return `${category} · ${topic}`;
       if (category) return category;
       if (topic) return topic;
       return null;
@@ -830,7 +1317,7 @@
     }
 
     function extractCandidateNameFromTitle(title, fallbackTicker) {
-      const t = (title || "").trim();
+      const t = (title || &quot;&quot;).trim();
       const patterns = [
         /Will\s+(.+?)\s+win\b/i,
         /Will\s+(.+?)\s+be\b/i,
@@ -838,10 +1325,10 @@
       ];
       for (const pattern of patterns) {
         const m = t.match(pattern);
-        if (m && m[1]) return m[1].trim().replace(/\?$/, "");
+        if (m &amp;&amp; m[1]) return m[1].trim().replace(/\?$/, &quot;&quot;);
       }
-      const parts = (fallbackTicker || "").split("-");
-      return parts[parts.length - 1] || fallbackTicker || "—";
+      const parts = (fallbackTicker || &quot;&quot;).split(&quot;-&quot;);
+      return parts[parts.length - 1] || fallbackTicker || &quot;—&quot;;
     }
 
     function sumNumbers(arr, getter) {
@@ -855,16 +1342,16 @@
 
     function computeEventTotals(markets) {
       return {
-        totalOI: sumNumbers(markets, (m) => getOpenInterest(m)),
-        totalVolContracts: sumNumbers(markets, (m) => getVolume(m)),
-        totalVol24hContracts: sumNumbers(markets, (m) => getVolume24h(m))
+        totalOI: sumNumbers(markets, (m) =&gt; getOpenInterest(m)),
+        totalVolContracts: sumNumbers(markets, (m) =&gt; getVolume(m)),
+        totalVol24hContracts: sumNumbers(markets, (m) =&gt; getVolume24h(m))
       };
     }
 
     function applyEventTopTilesDefault() {
       if (!lastEventTotals) return;
-      volLabel.textContent = "VOLUME (TOTAL)";
-      vol24Label.textContent = "VOLUME (24H)";
+      volLabel.textContent = &quot;VOLUME (TOTAL)&quot;;
+      vol24Label.textContent = &quot;VOLUME (24H)&quot;;
       statVol.textContent = formatContracts(lastEventTotals.totalVolContracts);
       statVol24.textContent = formatContracts(lastEventTotals.totalVol24hContracts);
       statOI.textContent = formatInt(lastEventTotals.totalOI);
@@ -872,26 +1359,26 @@
 
     function applyEventTopTilesSelectedFromMarket(mk) {
       if (!mk) { applyEventTopTilesDefault(); return; }
-      volLabel.textContent = "VOLUME (TOTAL)";
-      vol24Label.textContent = "VOLUME (24H)";
+      volLabel.textContent = &quot;VOLUME (TOTAL)&quot;;
+      vol24Label.textContent = &quot;VOLUME (24H)&quot;;
       statVol.textContent = formatContracts(getVolume(mk));
       statVol24.textContent = formatContracts(getVolume24h(mk));
       statOI.textContent = formatInt(getOpenInterest(mk));
     }
 
     async function getMarketSummary(ticker) {
-      const t = (ticker || "").toUpperCase();
+      const t = (ticker || &quot;&quot;).toUpperCase();
       if (!t) return null;
       if (marketSummaryCache.has(t)) return marketSummaryCache.get(t);
 
-      const fromList = lastEventMarkets.find((m) => (m?.ticker || "").toUpperCase() === t) || null;
+      const fromList = lastEventMarkets.find((m) =&gt; (m?.ticker || &quot;&quot;).toUpperCase() === t) || null;
       if (fromList) {
         const out = {
           volume: getVolume(fromList),
           volume_24h: getVolume24h(fromList),
           open_interest: getOpenInterest(fromList)
         };
-        if (out.volume !== null && out.volume_24h !== null && out.open_interest !== null) {
+        if (out.volume !== null &amp;&amp; out.volume_24h !== null &amp;&amp; out.open_interest !== null) {
           marketSummaryCache.set(t, out);
           return out;
         }
@@ -913,9 +1400,9 @@
     }
 
     async function updateEventTopTiles() {
-      if (activeMode !== "event") return;
-      if (eventChartMode === "selected" && selectedEventMarketTicker) {
-        const fromList = lastEventMarkets.find((m) => (m?.ticker || "").toUpperCase() === selectedEventMarketTicker) || null;
+      if (activeMode !== &quot;event&quot;) return;
+      if (eventChartMode === &quot;selected&quot; &amp;&amp; selectedEventMarketTicker) {
+        const fromList = lastEventMarkets.find((m) =&gt; (m?.ticker || &quot;&quot;).toUpperCase() === selectedEventMarketTicker) || null;
         if (fromList) {
           applyEventTopTilesSelectedFromMarket(fromList);
         } else {
@@ -933,58 +1420,58 @@
 
     function sortMarkets(markets, mode) {
       const m = [...markets];
-      const yesBid = (o) => getYesBid(o) ?? -Infinity;
-      const vol = (o) => getVolume(o) ?? -Infinity;
-      const title = (o) => (o?.title || "").toLowerCase();
+      const yesBid = (o) =&gt; getYesBid(o) ?? -Infinity;
+      const vol = (o) =&gt; getVolume(o) ?? -Infinity;
+      const title = (o) =&gt; (o?.title || &quot;&quot;).toLowerCase();
       switch (mode) {
-        case "yes_asc": m.sort((a, b) => yesBid(a) - yesBid(b)); break;
-        case "vol_desc": m.sort((a, b) => vol(b) - vol(a)); break;
-        case "title_asc": m.sort((a, b) => title(a).localeCompare(title(b))); break;
-        case "yes_desc":
-        default: m.sort((a, b) => yesBid(b) - yesBid(a)); break;
+        case &quot;yes_asc&quot;: m.sort((a, b) =&gt; yesBid(a) - yesBid(b)); break;
+        case &quot;vol_desc&quot;: m.sort((a, b) =&gt; vol(b) - vol(a)); break;
+        case &quot;title_asc&quot;: m.sort((a, b) =&gt; title(a).localeCompare(title(b))); break;
+        case &quot;yes_desc&quot;:
+        default: m.sort((a, b) =&gt; yesBid(b) - yesBid(a)); break;
       }
       return m;
     }
 
     function highlightSelectedRow() {
-      marketsTbody.querySelectorAll("tr").forEach((r) => r.classList.remove("selectedRow"));
+      marketsTbody.querySelectorAll(&quot;tr&quot;).forEach((r) =&gt; r.classList.remove(&quot;selectedRow&quot;));
       if (!selectedEventMarketTicker) return;
-      const row = marketsTbody.querySelector(`tr[data-ticker="${CSS.escape(selectedEventMarketTicker)}"]`);
-      if (row) row.classList.add("selectedRow");
+      const row = marketsTbody.querySelector(`tr[data-ticker=&quot;${CSS.escape(selectedEventMarketTicker)}&quot;]`);
+      if (row) row.classList.add(&quot;selectedRow&quot;);
     }
 
     function renderMarketsList(markets) {
       if (IS_LOCKED_EXPORT) {
-        listWrap.style.display = "none";
+        listWrap.style.display = &quot;none&quot;;
       } else {
-        listWrap.style.display = "block";
+        listWrap.style.display = &quot;block&quot;;
       }
-      listTitle.textContent = activeEventSection || "Markets";
+      listTitle.textContent = activeEventSection || &quot;Markets&quot;;
       const sorted = sortMarkets(markets, sortSelect.value);
       const display = marketsExpanded ? sorted : sorted.slice(0, MAX_MARKETS_COLLAPSED);
-      marketsTbody.innerHTML = "";
+      marketsTbody.innerHTML = &quot;&quot;;
 
-      toggleMarketsBtn.style.display = sorted.length > MAX_MARKETS_COLLAPSED ? "inline-block" : "none";
-      toggleMarketsBtn.textContent = marketsExpanded ? `Show top ${MAX_MARKETS_COLLAPSED}` : "Show all";
-      toggleMarketsBtn.classList.toggle("isExpanded", marketsExpanded);
+      toggleMarketsBtn.style.display = sorted.length &gt; MAX_MARKETS_COLLAPSED ? &quot;inline-block&quot; : &quot;none&quot;;
+      toggleMarketsBtn.textContent = marketsExpanded ? `Show top ${MAX_MARKETS_COLLAPSED}` : &quot;Show all&quot;;
+      toggleMarketsBtn.classList.toggle(&quot;isExpanded&quot;, marketsExpanded);
       countTag.textContent = marketsExpanded ? `${sorted.length} markets` : `Top ${Math.min(MAX_MARKETS_COLLAPSED, sorted.length)} of ${sorted.length}`;
 
       for (const mk of display) {
-        const tkr = (mk?.ticker || mk?.market_ticker || "").toUpperCase();
-        const tr = document.createElement("tr");
-        tr.className = "clickable";
+        const tkr = (mk?.ticker || mk?.market_ticker || &quot;&quot;).toUpperCase();
+        const tr = document.createElement(&quot;tr&quot;);
+        tr.className = &quot;clickable&quot;;
         tr.dataset.ticker = tkr;
         tr.innerHTML = `
-          <td>${mk?.title || "—"}</td>
-          <td>${fmtCentsOrNull(getYesBid(mk))} / ${fmtCentsOrNull(getYesAsk(mk))}</td>
-          <td>${fmtCentsOrNull(getNoBid(mk))} / ${fmtCentsOrNull(getNoAsk(mk))}</td>
-          <td>${(getVolume(mk) ?? "—").toString()}</td>
-          <td class="tickerCell">${mk?.ticker || mk?.market_ticker || "—"}</td>
+          &lt;td&gt;${mk?.title || &quot;—&quot;}&lt;/td&gt;
+          &lt;td&gt;${fmtCentsOrNull(getYesBid(mk))} / ${fmtCentsOrNull(getYesAsk(mk))}&lt;/td&gt;
+          &lt;td&gt;${fmtCentsOrNull(getNoBid(mk))} / ${fmtCentsOrNull(getNoAsk(mk))}&lt;/td&gt;
+          &lt;td&gt;${(getVolume(mk) ?? &quot;—&quot;).toString()}&lt;/td&gt;
+          &lt;td class=&quot;tickerCell&quot;&gt;${mk?.ticker || mk?.market_ticker || &quot;—&quot;}&lt;/td&gt;
         `;
-        tr.addEventListener("click", async () => {
-          if (activeMode !== "event") return;
+        tr.addEventListener(&quot;click&quot;, async () =&gt; {
+          if (activeMode !== &quot;event&quot;) return;
           selectedEventMarketTicker = tkr;
-          eventChartMode = "selected";
+          eventChartMode = &quot;selected&quot;;
           updateChartModeButtons();
           updateSelectedModeAvailability();
           highlightSelectedRow();
@@ -1003,53 +1490,53 @@
     }
 
     function renderLegendFromDatasets(datasets) {
-      legendRow.innerHTML = "";
-      if (activeMode === "market") {
-        legendRow.style.display = "none";
+      legendRow.innerHTML = &quot;&quot;;
+      if (activeMode === &quot;market&quot;) {
+        legendRow.style.display = &quot;none&quot;;
         const ds0 = datasets[0];
         const last0 = ds0?.data?.length ? ds0.data[ds0.data.length - 1].y : null;
         if (last0 !== null) {
           chancePctEl.textContent = `${Math.round(last0)}%`;
-          chancePctEl.style.display = "inline";
+          chancePctEl.style.display = &quot;inline&quot;;
         } else {
-          chancePctEl.textContent = "";
-          chancePctEl.style.display = "none";
+          chancePctEl.textContent = &quot;&quot;;
+          chancePctEl.style.display = &quot;none&quot;;
         }
-        eventTopPctEl.textContent = "";
-        eventTopPctEl.style.display = "none";
+        eventTopPctEl.textContent = &quot;&quot;;
+        eventTopPctEl.style.display = &quot;none&quot;;
         return;
       }
 
-      chancePctEl.textContent = "";
-      chancePctEl.style.display = "none";
+      chancePctEl.textContent = &quot;&quot;;
+      chancePctEl.style.display = &quot;none&quot;;
 
       if (!Array.isArray(datasets) || !datasets.length) {
-        legendRow.style.display = "none";
+        legendRow.style.display = &quot;none&quot;;
         return;
       }
 
-      legendRow.style.display = "flex";
+      legendRow.style.display = &quot;flex&quot;;
       for (const ds of datasets) {
         const last = ds?.data?.length ? ds.data[ds.data.length - 1].y : null;
-        const item = document.createElement("div");
-        item.className = "legendItem";
-        item.innerHTML = `<span class="dot" style="background:${ds.borderColor || '#999'}"></span><span>${ds.label || '—'}</span><span class="legendPct">${last === null ? '—' : Math.round(last) + '%'}</span>`;
+        const item = document.createElement(&quot;div&quot;);
+        item.className = &quot;legendItem&quot;;
+        item.innerHTML = `&lt;span class=&quot;dot&quot; style=&quot;background:${ds.borderColor || &#x27;#999&#x27;}&quot;&gt;&lt;/span&gt;&lt;span&gt;${ds.label || &#x27;—&#x27;}&lt;/span&gt;&lt;span class=&quot;legendPct&quot;&gt;${last === null ? &#x27;—&#x27; : Math.round(last) + &#x27;%&#x27;}&lt;/span&gt;`;
         legendRow.appendChild(item);
       }
     }
 
     function prettyMarketsLine(tickers) {
-      return (tickers || []).map((t) => tickerToName.get((t || "").toUpperCase()) || t).filter(Boolean).join(" , ");
+      return (tickers || []).map((t) =&gt; tickerToName.get((t || &quot;&quot;).toUpperCase()) || t).filter(Boolean).join(&quot; , &quot;);
     }
 
     function isoToUnixSeconds(iso) {
-      if (!iso || typeof iso !== "string") return null;
+      if (!iso || typeof iso !== &quot;string&quot;) return null;
       const ms = Date.parse(iso);
       return Number.isFinite(ms) ? Math.floor(ms / 1000) : null;
     }
 
     async function getMarketOpenTs(ticker) {
-      const t = (ticker || "").toUpperCase();
+      const t = (ticker || &quot;&quot;).toUpperCase();
       if (!t) return null;
       if (marketOpenTsCache.has(t)) return marketOpenTsCache.get(t);
       try {
@@ -1070,17 +1557,17 @@
 
     async function getEarliestOpenTs(tickers) {
       const vals = await Promise.all((tickers || []).map(getMarketOpenTs));
-      const nums = vals.filter((v) => typeof v === "number" && v > 0);
+      const nums = vals.filter((v) =&gt; typeof v === &quot;number&quot; &amp;&amp; v &gt; 0);
       return nums.length ? Math.min(...nums) : null;
     }
 
     async function rangeToWindow(range, tickersForChart) {
       const nowSec = Math.floor(Date.now() / 1000);
-      if (range === "live") return { start: nowSec - 3600, end: nowSec, interval: 1 };
-      if (range === "1d") return { start: nowSec - 86400, end: nowSec, interval: 60 };
-      if (range === "1w") return { start: nowSec - 7 * 86400, end: nowSec, interval: 60 };
-      if (range === "1m") return { start: nowSec - 30 * 86400, end: nowSec, interval: 1440 };
-      if (range === "1y") return { start: nowSec - 365 * 86400, end: nowSec, interval: 1440 };
+      if (range === &quot;live&quot;) return { start: nowSec - 3600, end: nowSec, interval: 1 };
+      if (range === &quot;1d&quot;) return { start: nowSec - 86400, end: nowSec, interval: 60 };
+      if (range === &quot;1w&quot;) return { start: nowSec - 7 * 86400, end: nowSec, interval: 60 };
+      if (range === &quot;1m&quot;) return { start: nowSec - 30 * 86400, end: nowSec, interval: 1440 };
+      if (range === &quot;1y&quot;) return { start: nowSec - 365 * 86400, end: nowSec, interval: 1440 };
       const inception = await getEarliestOpenTs(tickersForChart);
       return { start: inception ?? (nowSec - 5 * 365 * 86400), end: nowSec, interval: 1440 };
     }
@@ -1089,11 +1576,11 @@
       const pts = [];
       for (const c of candles || []) {
         const ts = n(c?.end_period_ts);
-        const close = n(c?.price?.close) ?? (() => {
+        const close = n(c?.price?.close) ?? (() =&gt; {
           const d = n(c?.price?.close_dollars);
           return d === null ? null : d * 100;
         })();
-        if (ts !== null && close !== null) {
+        if (ts !== null &amp;&amp; close !== null) {
           pts.push({ x: ts * 1000, y: close });
         }
       }
@@ -1101,55 +1588,55 @@
     }
 
     function updateRangeButtonsActive() {
-      document.querySelectorAll("[data-range]").forEach((btn) => {
-        btn.classList.toggle("active", btn.getAttribute("data-range") === activeRange);
+      document.querySelectorAll(&quot;[data-range]&quot;).forEach((btn) =&gt; {
+        btn.classList.toggle(&quot;active&quot;, btn.getAttribute(&quot;data-range&quot;) === activeRange);
       });
     }
 
     function updateChartModeButtons() {
-      document.querySelectorAll("[data-chartmode]").forEach((btn) => btn.classList.remove("isActive"));
-      const activeBtn = document.querySelector(`[data-chartmode="${eventChartMode}"]`);
-      if (activeBtn) activeBtn.classList.add("isActive");
+      document.querySelectorAll(&quot;[data-chartmode]&quot;).forEach((btn) =&gt; btn.classList.remove(&quot;isActive&quot;));
+      const activeBtn = document.querySelector(`[data-chartmode=&quot;${eventChartMode}&quot;]`);
+      if (activeBtn) activeBtn.classList.add(&quot;isActive&quot;);
     }
 
     function updateSelectedModeAvailability() {
-      const selBtn = el("btnSelectedMode");
+      const selBtn = el(&quot;btnSelectedMode&quot;);
       if (!selBtn) return;
-      selBtn.classList.toggle("isDisabled", !selectedEventMarketTicker);
+      selBtn.classList.toggle(&quot;isDisabled&quot;, !selectedEventMarketTicker);
     }
 
     function pickEventTickersForChart() {
       if (!lastEventMarkets.length) return [];
-      if (eventChartMode === "selected" && selectedEventMarketTicker) return [selectedEventMarketTicker];
+      if (eventChartMode === &quot;selected&quot; &amp;&amp; selectedEventMarketTicker) return [selectedEventMarketTicker];
       return [...lastEventMarkets]
-        .sort((a, b) => (getYesBid(b) ?? -Infinity) - (getYesBid(a) ?? -Infinity))
+        .sort((a, b) =&gt; (getYesBid(b) ?? -Infinity) - (getYesBid(a) ?? -Infinity))
         .slice(0, 3)
-        .map((m) => (m?.ticker || m?.market_ticker || "").toUpperCase())
+        .map((m) =&gt; (m?.ticker || m?.market_ticker || &quot;&quot;).toUpperCase())
         .filter(Boolean);
     }
 
     const endPointLabelsPlugin = {
-      id: "endPointLabelsPlugin",
+      id: &quot;endPointLabelsPlugin&quot;,
       afterDatasetsDraw(chartInstance) {
         const { ctx, chartArea } = chartInstance;
         if (!chartArea) return;
         ctx.save();
-        ctx.font = "800 15px system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
-        ctx.textBaseline = "middle";
-        chartInstance.data.datasets.forEach((dataset, datasetIndex) => {
+        ctx.font = &quot;800 15px system-ui, -apple-system, Segoe UI, Roboto, sans-serif&quot;;
+        ctx.textBaseline = &quot;middle&quot;;
+        chartInstance.data.datasets.forEach((dataset, datasetIndex) =&gt; {
           const meta = chartInstance.getDatasetMeta(datasetIndex);
           if (!meta || meta.hidden || !meta.data || !meta.data.length) return;
           let lastIndex = meta.data.length - 1;
-          while (lastIndex >= 0 && !meta.data[lastIndex]) lastIndex--;
-          if (lastIndex < 0) return;
+          while (lastIndex &gt;= 0 &amp;&amp; !meta.data[lastIndex]) lastIndex--;
+          if (lastIndex &lt; 0) return;
           const point = meta.data[lastIndex];
           const value = dataset.data?.[lastIndex]?.y;
           if (!Number.isFinite(value)) return;
-          const color = dataset.borderColor || "#fff";
+          const color = dataset.borderColor || &quot;#fff&quot;;
           const x = Math.min(point.x + 14, chartArea.right + 8);
           const y = Math.max(chartArea.top + 12, Math.min(point.y, chartArea.bottom - 12));
           ctx.fillStyle = color;
-          ctx.strokeStyle = "rgba(17,19,23,.92)";
+          ctx.strokeStyle = &quot;rgba(17,19,23,.92)&quot;;
           ctx.lineWidth = 5;
           ctx.strokeText(`${Math.round(value)}%`, x, y);
           ctx.fillText(`${Math.round(value)}%`, x, y);
@@ -1162,22 +1649,22 @@
       if (!Array.isArray(tickers) || !tickers.length) return;
       hardDestroyChart();
       const { start, end, interval } = await rangeToWindow(activeRange, tickers);
-      const url = `${BASE}/markets/candlesticks?market_tickers=${encodeURIComponent(tickers.join(","))}&start_ts=${start}&end_ts=${end}&period_interval=${interval}&include_latest_before_start=true`;
+      const url = `${BASE}/markets/candlesticks?market_tickers=${encodeURIComponent(tickers.join(&quot;,&quot;))}&amp;start_ts=${start}&amp;end_ts=${end}&amp;period_interval=${interval}&amp;include_latest_before_start=true`;
       const payload = await fetchJSON(url);
       setDebug(payload);
 
       const markets = payload?.markets || [];
       if (!Array.isArray(markets) || !markets.length) {
-        throw new Error("No candlestick data returned for chart range.");
+        throw new Error(&quot;No candlestick data returned for chart range.&quot;);
       }
 
       const byTicker = new Map();
-      for (const m of markets) byTicker.set((m?.market_ticker || "").toUpperCase(), m);
-      const orderedMarkets = tickers.map((t) => byTicker.get((t || "").toUpperCase())).filter(Boolean);
-      const palette = ["#20c997", "#3b82f6", "#f97316", "#a855f7", "#ef4444", "#eab308"];
+      for (const m of markets) byTicker.set((m?.market_ticker || &quot;&quot;).toUpperCase(), m);
+      const orderedMarkets = tickers.map((t) =&gt; byTicker.get((t || &quot;&quot;).toUpperCase())).filter(Boolean);
+      const palette = [&quot;#20c997&quot;, &quot;#3b82f6&quot;, &quot;#f97316&quot;, &quot;#a855f7&quot;, &quot;#ef4444&quot;, &quot;#eab308&quot;];
 
-      const datasets = orderedMarkets.map((m, idx) => {
-        const marketTicker = (m?.market_ticker || "").toUpperCase();
+      const datasets = orderedMarkets.map((m, idx) =&gt; {
+        const marketTicker = (m?.market_ticker || &quot;&quot;).toUpperCase();
         const label = tickerToName.get(marketTicker) || marketTicker;
         const data = toChartPoints(m?.candlesticks || []);
         const color = palette[idx % palette.length];
@@ -1188,35 +1675,35 @@
           backgroundColor: color,
           borderWidth: 3,
           tension: 0.32,
-          pointRadius: (context) => context.dataIndex === context.dataset.data.length - 1 ? 5 : 0,
+          pointRadius: (context) =&gt; context.dataIndex === context.dataset.data.length - 1 ? 5 : 0,
           pointHoverRadius: 5,
           pointBorderWidth: 3,
-          pointBorderColor: "rgba(255,255,255,.18)",
+          pointBorderColor: &quot;rgba(255,255,255,.18)&quot;,
           pointBackgroundColor: color,
           fill: false
         };
-      }).filter((ds) => Array.isArray(ds.data) && ds.data.length > 0);
+      }).filter((ds) =&gt; Array.isArray(ds.data) &amp;&amp; ds.data.length &gt; 0);
 
       if (!datasets.length) {
-        throw new Error("Candlestick response returned no usable numeric points.");
+        throw new Error(&quot;Candlestick response returned no usable numeric points.&quot;);
       }
 
-      chartWrap.style.display = "block";
-      chartMeta.textContent = "";
+      chartWrap.style.display = &quot;block&quot;;
+      chartMeta.textContent = &quot;&quot;;
       renderLegendFromDatasets(datasets);
 
-      const canvas = el("priceChart");
-      const ctx = canvas.getContext("2d");
-      const xUnit = activeRange === "live" ? "minute" : activeRange === "1d" ? "hour" : activeRange === "1w" || activeRange === "1m" ? "day" : "month";
+      const canvas = el(&quot;priceChart&quot;);
+      const ctx = canvas.getContext(&quot;2d&quot;);
+      const xUnit = activeRange === &quot;live&quot; ? &quot;minute&quot; : activeRange === &quot;1d&quot; ? &quot;hour&quot; : activeRange === &quot;1w&quot; || activeRange === &quot;1m&quot; ? &quot;day&quot; : &quot;month&quot;;
       const startMs = start * 1000;
       const endMs = end * 1000;
       const crossesYears = new Date(startMs).getFullYear() !== new Date(endMs).getFullYear();
-      const showYear = (activeRange === "1y" || activeRange === "all") && crossesYears;
-      const tickFmt = activeRange === "live" ? "HH:mm" : activeRange === "1d" ? "HH:mm" : activeRange === "1w" ? "d MMM" : activeRange === "1m" ? "d MMM" : showYear ? "dd MMM yy" : activeRange === "1y" ? "dd MMM" : "MMM";
-      const tooltipFmt = activeRange === "live" || activeRange === "1d" ? "d MMM, HH:mm" : showYear ? "dd MMM yy" : "d MMM";
+      const showYear = (activeRange === &quot;1y&quot; || activeRange === &quot;all&quot;) &amp;&amp; crossesYears;
+      const tickFmt = activeRange === &quot;live&quot; ? &quot;HH:mm&quot; : activeRange === &quot;1d&quot; ? &quot;HH:mm&quot; : activeRange === &quot;1w&quot; ? &quot;d MMM&quot; : activeRange === &quot;1m&quot; ? &quot;d MMM&quot; : showYear ? &quot;dd MMM yy&quot; : activeRange === &quot;1y&quot; ? &quot;dd MMM&quot; : &quot;MMM&quot;;
+      const tooltipFmt = activeRange === &quot;live&quot; || activeRange === &quot;1d&quot; ? &quot;d MMM, HH:mm&quot; : showYear ? &quot;dd MMM yy&quot; : &quot;d MMM&quot;;
 
       chart = new Chart(ctx, {
-        type: "line",
+        type: &quot;line&quot;,
         data: { datasets },
         plugins: [endPointLabelsPlugin],
         options: {
@@ -1228,61 +1715,61 @@
           plugins: {
             legend: { display: false },
             tooltip: {
-              mode: "index",
+              mode: &quot;index&quot;,
               intersect: false,
               callbacks: {
-                title: (items) => {
+                title: (items) =&gt; {
                   const x = items?.[0]?.parsed?.x;
-                  if (!x) return "";
-                  return typeof dateFns !== "undefined" ? dateFns.format(new Date(x), tooltipFmt) : new Date(x).toLocaleString();
+                  if (!x) return &quot;&quot;;
+                  return typeof dateFns !== &quot;undefined&quot; ? dateFns.format(new Date(x), tooltipFmt) : new Date(x).toLocaleString();
                 },
-                label: (ctx) => `${ctx.dataset?.label || ""}: ${typeof ctx.parsed?.y === "number" ? ctx.parsed.y.toFixed(1) + "%" : "—"}`
+                label: (ctx) =&gt; `${ctx.dataset?.label || &quot;&quot;}: ${typeof ctx.parsed?.y === &quot;number&quot; ? ctx.parsed.y.toFixed(1) + &quot;%&quot; : &quot;—&quot;}`
               }
             }
           },
-          interaction: { mode: "index", intersect: false },
+          interaction: { mode: &quot;index&quot;, intersect: false },
           scales: {
             x: {
-              type: "time",
+              type: &quot;time&quot;,
               time: {
                 unit: xUnit,
-                displayFormats: { minute: "HH:mm", hour: "HH:mm", day: "d MMM", month: showYear ? "dd MMM yy" : (activeRange === "1y" ? "dd MMM" : "MMM") },
+                displayFormats: { minute: &quot;HH:mm&quot;, hour: &quot;HH:mm&quot;, day: &quot;d MMM&quot;, month: showYear ? &quot;dd MMM yy&quot; : (activeRange === &quot;1y&quot; ? &quot;dd MMM&quot; : &quot;MMM&quot;) },
                 tooltipFormat: tooltipFmt
               },
-              grid: { color: document.body.classList.contains("lightTheme") ? "rgba(0,0,0,.08)" : "rgba(255,255,255,.10)", borderDash: [4, 4] },
+              grid: { color: document.body.classList.contains(&quot;lightTheme&quot;) ? &quot;rgba(0,0,0,.08)&quot; : &quot;rgba(255,255,255,.10)&quot;, borderDash: [4, 4] },
               ticks: {
-                color: document.body.classList.contains("lightTheme") ? "rgba(0,0,0,.7)" : "rgba(255,255,255,.7)",
+                color: document.body.classList.contains(&quot;lightTheme&quot;) ? &quot;rgba(0,0,0,.7)&quot; : &quot;rgba(255,255,255,.7)&quot;,
                 maxRotation: 0,
                 autoSkip: true,
-                maxTicksLimit: activeRange === "live" ? 7 : activeRange === "1d" ? 8 : activeRange === "1w" ? 7 : 6,
-                callback: (_value, index, ticks) => {
-                  const raw = (ticks?.[index] && typeof ticks[index].value === "number") ? ticks[index].value : (typeof _value === "number" ? _value : Number(_value));
-                  if (!Number.isFinite(raw)) return "";
+                maxTicksLimit: activeRange === &quot;live&quot; ? 7 : activeRange === &quot;1d&quot; ? 8 : activeRange === &quot;1w&quot; ? 7 : 6,
+                callback: (_value, index, ticks) =&gt; {
+                  const raw = (ticks?.[index] &amp;&amp; typeof ticks[index].value === &quot;number&quot;) ? ticks[index].value : (typeof _value === &quot;number&quot; ? _value : Number(_value));
+                  if (!Number.isFinite(raw)) return &quot;&quot;;
                   const d = new Date(raw);
-                  if (activeRange === "live") {
-                    return new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit", hour12: true }).format(d).replace(" ", "");
+                  if (activeRange === &quot;live&quot;) {
+                    return new Intl.DateTimeFormat(undefined, { hour: &quot;numeric&quot;, minute: &quot;2-digit&quot;, hour12: true }).format(d).replace(&quot; &quot;, &quot;&quot;);
                   }
-                  if (activeRange === "1d") {
-                    return new Intl.DateTimeFormat(undefined, { hour: "numeric", hour12: true }).format(d).replace(" ", "");
+                  if (activeRange === &quot;1d&quot;) {
+                    return new Intl.DateTimeFormat(undefined, { hour: &quot;numeric&quot;, hour12: true }).format(d).replace(&quot; &quot;, &quot;&quot;);
                   }
                   try {
-                    if ((activeRange === "1y" || activeRange === "all") && crossesYears) {
-                      return typeof dateFns !== "undefined" ? dateFns.format(d, "dd MMM yy") : d.toLocaleDateString();
+                    if ((activeRange === &quot;1y&quot; || activeRange === &quot;all&quot;) &amp;&amp; crossesYears) {
+                      return typeof dateFns !== &quot;undefined&quot; ? dateFns.format(d, &quot;dd MMM yy&quot;) : d.toLocaleDateString();
                     }
-                    return typeof dateFns !== "undefined" ? dateFns.format(d, tickFmt) : d.toLocaleDateString();
+                    return typeof dateFns !== &quot;undefined&quot; ? dateFns.format(d, tickFmt) : d.toLocaleDateString();
                   } catch (_) {
                     return d.toLocaleDateString();
                   }
                 }
               },
-              border: { color: document.body.classList.contains("lightTheme") ? "rgba(0,0,0,.12)" : "rgba(255,255,255,.12)" }
+              border: { color: document.body.classList.contains(&quot;lightTheme&quot;) ? &quot;rgba(0,0,0,.12)&quot; : &quot;rgba(255,255,255,.12)&quot; }
             },
             y: {
               min: 0,
               max: 100,
-              grid: { color: document.body.classList.contains("lightTheme") ? "rgba(0,0,0,.08)" : "rgba(255,255,255,.10)", borderDash: [4, 4] },
-              ticks: { stepSize: 25, color: document.body.classList.contains("lightTheme") ? "rgba(0,0,0,.7)" : "rgba(255,255,255,.78)", callback: (v) => `${v}%` },
-              border: { color: document.body.classList.contains("lightTheme") ? "rgba(0,0,0,.12)" : "rgba(255,255,255,.12)" }
+              grid: { color: document.body.classList.contains(&quot;lightTheme&quot;) ? &quot;rgba(0,0,0,.08)&quot; : &quot;rgba(255,255,255,.10)&quot;, borderDash: [4, 4] },
+              ticks: { stepSize: 25, color: document.body.classList.contains(&quot;lightTheme&quot;) ? &quot;rgba(0,0,0,.7)&quot; : &quot;rgba(255,255,255,.78)&quot;, callback: (v) =&gt; `${v}%` },
+              border: { color: document.body.classList.contains(&quot;lightTheme&quot;) ? &quot;rgba(0,0,0,.12)&quot; : &quot;rgba(255,255,255,.12)&quot; }
             }
           }
         }
@@ -1296,10 +1783,10 @@
     }
 
     async function fetchContracts24hForTicker(ticker) {
-      const t = (ticker || "").toUpperCase();
+      const t = (ticker || &quot;&quot;).toUpperCase();
       if (!t) return { yesContracts: NaN, noContracts: NaN };
       const cached = notional24hCache.get(t);
-      if (cached && Date.now() - cached.tsMs < 60000) return { yesContracts: cached.yesContracts, noContracts: cached.noContracts };
+      if (cached &amp;&amp; Date.now() - cached.tsMs &lt; 60000) return { yesContracts: cached.yesContracts, noContracts: cached.noContracts };
 
       const endTs = Math.floor(Date.now() / 1000);
       const startTs = endTs - 86400;
@@ -1307,17 +1794,17 @@
       let yesContracts = 0;
       let noContracts = 0;
 
-      for (let page = 0; page < 15; page++) {
-        const qs = new URLSearchParams({ ticker: t, min_ts: String(startTs), max_ts: String(endTs), limit: "1000" });
-        if (cursor) qs.set("cursor", cursor);
+      for (let page = 0; page &lt; 15; page++) {
+        const qs = new URLSearchParams({ ticker: t, min_ts: String(startTs), max_ts: String(endTs), limit: &quot;1000&quot; });
+        if (cursor) qs.set(&quot;cursor&quot;, cursor);
         const payload = await fetchJSON(`${BASE}/markets/trades?${qs.toString()}`);
         const trades = Array.isArray(payload?.trades) ? payload.trades : [];
         for (const tr of trades) {
           const count = n(tr?.count) ?? n(tr?.count_fp) ?? 0;
-          if (count <= 0) continue;
-          const side = String(tr?.taker_side || tr?.side || "").toLowerCase();
-          if (side === "yes") yesContracts += count;
-          else if (side === "no") noContracts += count;
+          if (count &lt;= 0) continue;
+          const side = String(tr?.taker_side || tr?.side || &quot;&quot;).toLowerCase();
+          if (side === &quot;yes&quot;) yesContracts += count;
+          else if (side === &quot;no&quot;) noContracts += count;
         }
         cursor = payload?.cursor || null;
         if (!cursor || !trades.length) break;
@@ -1328,16 +1815,16 @@
     }
 
     async function fetchContracts24hForEvent(eventTicker) {
-      const ev = (eventTicker || "").toUpperCase();
+      const ev = (eventTicker || &quot;&quot;).toUpperCase();
       if (!ev) return { yesContracts: NaN, noContracts: NaN };
       const cached = eventNotional24hCache.get(ev);
-      if (cached && Date.now() - cached.tsMs < 60000) return { yesContracts: cached.yesContracts, noContracts: cached.noContracts };
-      const tickers = lastEventMarkets.map((m) => (m?.ticker || m?.market_ticker || "").toUpperCase()).filter(Boolean);
-      const settled = await Promise.allSettled(tickers.map((t) => fetchContracts24hForTicker(t)));
+      if (cached &amp;&amp; Date.now() - cached.tsMs &lt; 60000) return { yesContracts: cached.yesContracts, noContracts: cached.noContracts };
+      const tickers = lastEventMarkets.map((m) =&gt; (m?.ticker || m?.market_ticker || &quot;&quot;).toUpperCase()).filter(Boolean);
+      const settled = await Promise.allSettled(tickers.map((t) =&gt; fetchContracts24hForTicker(t)));
       let yesContracts = 0;
       let noContracts = 0;
       for (const item of settled) {
-        if (item.status !== "fulfilled") continue;
+        if (item.status !== &quot;fulfilled&quot;) continue;
         const r = item.value;
         if (Number.isFinite(r.yesContracts)) yesContracts += r.yesContracts;
         if (Number.isFinite(r.noContracts)) noContracts += r.noContracts;
@@ -1347,41 +1834,41 @@
     }
 
     async function updateNotionalPillForTicker(ticker, labelMode) {
-      if (!ticker) { notionalRow.style.display = "none"; return; }
-      notionalRow.style.display = "flex";
-      notionalLabelEl.textContent = labelMode === "market" ? "24H Contracts Split:" : "24H Contracts Split (Selected market):";
-      notionalYesEl.textContent = "YES …";
-      notionalNoEl.textContent = "NO …";
+      if (!ticker) { notionalRow.style.display = &quot;none&quot;; return; }
+      notionalRow.style.display = &quot;flex&quot;;
+      notionalLabelEl.textContent = labelMode === &quot;market&quot; ? &quot;24H Contracts Split:&quot; : &quot;24H Contracts Split (Selected market):&quot;;
+      notionalYesEl.textContent = &quot;YES …&quot;;
+      notionalNoEl.textContent = &quot;NO …&quot;;
       try {
         const { yesContracts, noContracts } = await fetchContracts24hForTicker(ticker);
         notionalYesEl.textContent = `YES ${formatContracts(yesContracts)}`;
         notionalNoEl.textContent = `NO ${formatContracts(noContracts)}`;
       } catch (_) {
-        notionalYesEl.textContent = "YES —";
-        notionalNoEl.textContent = "NO —";
+        notionalYesEl.textContent = &quot;YES —&quot;;
+        notionalNoEl.textContent = &quot;NO —&quot;;
       }
     }
 
     async function updateEventNotionalPill() {
-      if (activeMode !== "event") return;
-      notionalRow.style.display = "flex";
-      notionalYesEl.textContent = "YES …";
-      notionalNoEl.textContent = "NO …";
+      if (activeMode !== &quot;event&quot;) return;
+      notionalRow.style.display = &quot;flex&quot;;
+      notionalYesEl.textContent = &quot;YES …&quot;;
+      notionalNoEl.textContent = &quot;NO …&quot;;
       try {
-        if (eventChartMode === "selected" && selectedEventMarketTicker) {
-          notionalLabelEl.textContent = "24H Contracts Split (Selected market):";
+        if (eventChartMode === &quot;selected&quot; &amp;&amp; selectedEventMarketTicker) {
+          notionalLabelEl.textContent = &quot;24H Contracts Split (Selected market):&quot;;
           const { yesContracts, noContracts } = await fetchContracts24hForTicker(selectedEventMarketTicker);
           notionalYesEl.textContent = `YES ${formatContracts(yesContracts)}`;
           notionalNoEl.textContent = `NO ${formatContracts(noContracts)}`;
         } else {
-          notionalLabelEl.textContent = "24H Contracts Split (All markets):";
+          notionalLabelEl.textContent = &quot;24H Contracts Split (All markets):&quot;;
           const { yesContracts, noContracts } = await fetchContracts24hForEvent(activeEventTicker);
           notionalYesEl.textContent = `YES ${formatContracts(yesContracts)}`;
           notionalNoEl.textContent = `NO ${formatContracts(noContracts)}`;
         }
       } catch (_) {
-        notionalYesEl.textContent = "YES —";
-        notionalNoEl.textContent = "NO —";
+        notionalYesEl.textContent = &quot;YES —&quot;;
+        notionalNoEl.textContent = &quot;NO —&quot;;
       }
     }
 
@@ -1392,35 +1879,35 @@
       yesBidAskEl.textContent = `${fmtCentsOrNull(getYesBid(data))} / ${fmtCentsOrNull(getYesAsk(data))}`;
       noBidAskEl.textContent = `${fmtCentsOrNull(getNoBid(data))} / ${fmtCentsOrNull(getNoAsk(data))}`;
       lastPriceEl.textContent = fmtCentsOrNull(getLastPrice(data));
-      volumeEl.textContent = (getVolume(data) ?? "—").toString();
-      metaEl.textContent = `Ticker: ${data?.ticker || activeMarketTicker} • Status: ${data?.status || '—'} • Closes: ${data?.close_time || '—'}`;
-      statsBar.style.display = "flex";
-      volLabel.textContent = "VOLUME (TOTAL)";
-      vol24Label.textContent = "VOLUME (24H)";
+      volumeEl.textContent = (getVolume(data) ?? &quot;—&quot;).toString();
+      metaEl.textContent = `Ticker: ${data?.ticker || activeMarketTicker} • Status: ${data?.status || &#x27;—&#x27;} • Closes: ${data?.close_time || &#x27;—&#x27;}`;
+      statsBar.style.display = &quot;flex&quot;;
+      volLabel.textContent = &quot;VOLUME (TOTAL)&quot;;
+      vol24Label.textContent = &quot;VOLUME (24H)&quot;;
       statVol.textContent = formatContracts(getVolume(data));
       statVol24.textContent = formatContracts(getVolume24h(data));
       statOI.textContent = formatInt(getOpenInterest(data));
-      await updateNotionalPillForTicker(activeMarketTicker, "market");
+      await updateNotionalPillForTicker(activeMarketTicker, &quot;market&quot;);
     }
 
     async function refreshActiveEventList() {
       if (!activeEventTicker) return;
       activeEventSection = await fetchEventSection(activeEventTicker);
-      const payload = await fetchJSON(`${BASE}/markets?event_ticker=${encodeURIComponent(activeEventTicker)}&limit=200`);
+      const payload = await fetchJSON(`${BASE}/markets?event_ticker=${encodeURIComponent(activeEventTicker)}&amp;limit=200`);
       const markets = payload?.markets ?? [];
       if (!Array.isArray(markets) || !markets.length) return;
       lastEventMarkets = markets;
       lastEventTotals = computeEventTotals(markets);
-      statsBar.style.display = "flex";
+      statsBar.style.display = &quot;flex&quot;;
       applyEventTopTilesDefault();
-      metaEl.textContent = `Event: ${activeEventTicker || "—"} • Showing ${markets.length} markets`;
+      metaEl.textContent = `Event: ${activeEventTicker || &quot;—&quot;} • Showing ${markets.length} markets`;
       tickerToName.clear();
-      markets.forEach((m) => {
-        const tkr = (m?.ticker || m?.market_ticker || "").toUpperCase();
+      markets.forEach((m) =&gt; {
+        const tkr = (m?.ticker || m?.market_ticker || &quot;&quot;).toUpperCase();
         tickerToName.set(tkr, extractCandidateNameFromTitle(m?.title, tkr));
       });
       if (selectedEventMarketTicker) {
-        const stillExists = markets.some((m) => (m?.ticker || m?.market_ticker || "").toUpperCase() === selectedEventMarketTicker);
+        const stillExists = markets.some((m) =&gt; (m?.ticker || m?.market_ticker || &quot;&quot;).toUpperCase() === selectedEventMarketTicker);
         if (!stillExists) selectedEventMarketTicker = null;
       }
       updateSelectedModeAvailability();
@@ -1430,71 +1917,71 @@
     }
 
     async function loadMarket(tickerRaw) {
-      const ticker = (tickerRaw || "").trim().toUpperCase();
+      const ticker = (tickerRaw || &quot;&quot;).trim().toUpperCase();
       clearUI();
       titleEl.textContent = `Loading ${ticker}…`;
       try {
         const payload = await fetchJSON(`${BASE}/markets/${encodeURIComponent(ticker)}`);
         setDebug(payload);
         const data = payload.market ?? payload;
-        if (!data || typeof data !== "object") throw new Error("Unexpected response shape from proxy.");
-        activeMode = "market";
+        if (!data || typeof data !== &quot;object&quot;) throw new Error(&quot;Unexpected response shape from proxy.&quot;);
+        activeMode = &quot;market&quot;;
         activeMarketTicker = (data?.ticker || ticker).toUpperCase();
         eventTopTitleTextEl.textContent = data?.title || data?.ticker || ticker;
-        eventTopTitleEl.style.display = "flex";
-        metaEl.textContent = `Ticker: ${data?.ticker || ticker} • Status: ${data?.status || '—'} • Closes: ${data?.close_time || '—'}`;
+        eventTopTitleEl.style.display = &quot;flex&quot;;
+        metaEl.textContent = `Ticker: ${data?.ticker || ticker} • Status: ${data?.status || &#x27;—&#x27;} • Closes: ${data?.close_time || &#x27;—&#x27;}`;
         yesBidAskEl.textContent = `${fmtCentsOrNull(getYesBid(data))} / ${fmtCentsOrNull(getYesAsk(data))}`;
         noBidAskEl.textContent = `${fmtCentsOrNull(getNoBid(data))} / ${fmtCentsOrNull(getNoAsk(data))}`;
         lastPriceEl.textContent = fmtCentsOrNull(getLastPrice(data));
-        volumeEl.textContent = (getVolume(data) ?? "—").toString();
-        gridEl.style.display = "grid";
-        statsBar.style.display = "flex";
-        volLabel.textContent = "VOLUME (TOTAL)";
-        vol24Label.textContent = "VOLUME (24H)";
+        volumeEl.textContent = (getVolume(data) ?? &quot;—&quot;).toString();
+        gridEl.style.display = &quot;grid&quot;;
+        statsBar.style.display = &quot;flex&quot;;
+        volLabel.textContent = &quot;VOLUME (TOTAL)&quot;;
+        vol24Label.textContent = &quot;VOLUME (24H)&quot;;
         statVol.textContent = formatContracts(getVolume(data));
         statVol24.textContent = formatContracts(getVolume24h(data));
         statOI.textContent = formatInt(getOpenInterest(data));
         tickerToName.set(activeMarketTicker, data?.title || activeMarketTicker);
-        await updateNotionalPillForTicker(activeMarketTicker, "market");
+        await updateNotionalPillForTicker(activeMarketTicker, &quot;market&quot;);
         await loadChartForMarketTickers([activeMarketTicker]);
         showWidget();
-        titleEl.textContent = "Enter a market ticker or event ticker";
+        titleEl.textContent = &quot;Enter a market ticker or event ticker&quot;;
       } catch (e) {
         hideWidget();
         errEl.textContent = `Couldn’t load that market.\n${e.message}`;
-        titleEl.textContent = "Enter a market ticker or event ticker";
+        titleEl.textContent = &quot;Enter a market ticker or event ticker&quot;;
       }
     }
 
     async function loadEvent(eventTickerRaw) {
-      const eventTicker = (eventTickerRaw || "").trim().toUpperCase();
+      const eventTicker = (eventTickerRaw || &quot;&quot;).trim().toUpperCase();
       clearUI();
       titleEl.textContent = `Loading ${eventTicker}…`;
       try {
-        activeMode = "event";
+        activeMode = &quot;event&quot;;
         activeEventTicker = eventTicker;
         activeEventSection = await fetchEventSection(eventTicker);
         const eventTitle = await fetchEventTitle(eventTicker);
         eventTopTitleTextEl.textContent = eventTitle || eventTicker;
-        eventTopTitleEl.style.display = "flex";
-        const payload = await fetchJSON(`${BASE}/markets?event_ticker=${encodeURIComponent(eventTicker)}&limit=200`);
+        eventTopTitleEl.style.display = &quot;flex&quot;;
+        const payload = await fetchJSON(`${BASE}/markets?event_ticker=${encodeURIComponent(eventTicker)}&amp;limit=200`);
         setDebug(payload);
         const markets = payload?.markets ?? [];
-        if (!Array.isArray(markets) || !markets.length) throw new Error("No markets found for that event ticker.");
+        if (!Array.isArray(markets) || !markets.length) throw new Error(&quot;No markets found for that event ticker.&quot;);
 
         lastEventMarkets = markets;
         lastEventTotals = computeEventTotals(markets);
-        statsBar.style.display = "flex";
+        statsBar.style.display = &quot;flex&quot;;
         applyEventTopTilesDefault();
           metaEl.textContent = `Event: ${eventTicker} • Showing ${markets.length} markets`;
         tickerToName.clear();
-        markets.forEach((m) => {
-          const tkr = (m?.ticker || m?.market_ticker || "").toUpperCase();
+        markets.forEach((m) =&gt; {
+          const tkr = (m?.ticker || m?.market_ticker || &quot;&quot;).toUpperCase();
           tickerToName.set(tkr, extractCandidateNameFromTitle(m?.title, tkr));
         });
-        const bootSelectedTicker = IS_LOCKED_EXPORT ? String(EMBED_CONFIG?.selectedEventMarketTicker || "").trim().toUpperCase() : "";
+        const bootSelectedTicker = IS_LOCKED_EXPORT ? String(EMBED_CONFIG?.selectedEventMarketTicker || &quot;&quot;).trim().toUpperCase() : &quot;&quot;;
         selectedEventMarketTicker = bootSelectedTicker || null;
-        eventChartMode = (IS_LOCKED_EXPORT && EMBED_CONFIG?.eventChartMode === "selected" && selectedEventMarketTicker) ? "selected" : "default";
+        eventChartMode = (IS_LOCKED_EXPORT &amp;&amp; EMBED_CONFIG?.eventChartMode === &quot;selected&quot; &amp;&amp; selectedEventMarketTicker) ? &quot;selected&quot; : &quot;default&quot;;
         marketsExpanded = false;
         updateChartModeButtons();
         updateSelectedModeAvailability();
@@ -1502,65 +1989,65 @@
         await updateEventNotionalPill();
         await loadEventChart();
         showWidget();
-        titleEl.textContent = "Enter a market ticker or event ticker";
+        titleEl.textContent = &quot;Enter a market ticker or event ticker&quot;;
       } catch (e) {
         hideWidget();
         errEl.textContent = `Couldn’t load that event.\n${e.message}`;
-        titleEl.textContent = "Enter a market ticker or event ticker";
+        titleEl.textContent = &quot;Enter a market ticker or event ticker&quot;;
       }
     }
 
     async function loadFromInput(raw) {
-      const value = (raw || "").trim().toUpperCase();
+      const value = (raw || &quot;&quot;).trim().toUpperCase();
       if (!value) return;
       inputBox.value = value;
 
       try {
-        const eventPayload = await fetchJSON(`${BASE}/markets?event_ticker=${encodeURIComponent(value)}&limit=2`);
-        if (Array.isArray(eventPayload?.markets) && eventPayload.markets.length) {
+        const eventPayload = await fetchJSON(`${BASE}/markets?event_ticker=${encodeURIComponent(value)}&amp;limit=2`);
+        if (Array.isArray(eventPayload?.markets) &amp;&amp; eventPayload.markets.length) {
           const newUrl = new URL(location.href);
-          newUrl.searchParams.delete("ticker");
-          newUrl.searchParams.set("event", value);
-          history.replaceState({}, "", newUrl);
+          newUrl.searchParams.delete(&quot;ticker&quot;);
+          newUrl.searchParams.set(&quot;event&quot;, value);
+          history.replaceState({}, &quot;&quot;, newUrl);
           await loadEvent(value);
           return;
         }
       } catch (_) {}
 
       const newUrl = new URL(location.href);
-      newUrl.searchParams.delete("event");
-      newUrl.searchParams.set("ticker", value);
-      history.replaceState({}, "", newUrl);
+      newUrl.searchParams.delete(&quot;event&quot;);
+      newUrl.searchParams.set(&quot;ticker&quot;, value);
+      history.replaceState({}, &quot;&quot;, newUrl);
       await loadMarket(value);
     }
 
     function applyBrand(key, persist = true) {
-      const resolvedKey = BRAND_PRESETS[key] ? key : "vegasinsider";
+      const resolvedKey = BRAND_PRESETS[key] ? key : &quot;vegasinsider&quot;;
       const p = BRAND_PRESETS[resolvedKey];
       currentBrandKey = resolvedKey;
-      widgetCardEl.style.setProperty("--brand-accent", p.accent);
-      widgetCardEl.style.setProperty("--brand-accent-2", p.accent2);
-      widgetCardEl.style.setProperty("--brand-accent-rgb", p.rgb);
-      document.documentElement.style.setProperty("--brand-accent", p.accent);
-      document.documentElement.style.setProperty("--brand-accent-2", p.accent2);
-      document.documentElement.style.setProperty("--brand-accent-rgb", p.rgb);
+      widgetCardEl.style.setProperty(&quot;--brand-accent&quot;, p.accent);
+      widgetCardEl.style.setProperty(&quot;--brand-accent-2&quot;, p.accent2);
+      widgetCardEl.style.setProperty(&quot;--brand-accent-rgb&quot;, p.rgb);
+      document.documentElement.style.setProperty(&quot;--brand-accent&quot;, p.accent);
+      document.documentElement.style.setProperty(&quot;--brand-accent-2&quot;, p.accent2);
+      document.documentElement.style.setProperty(&quot;--brand-accent-rgb&quot;, p.rgb);
       brandLogo.src = p.logo;
       brandLogo.alt = p.name;
-      if (persist && !IS_LOCKED_EXPORT) {
-        try { localStorage.setItem("kalshi_widget_brand", resolvedKey); } catch (_) {}
+      if (persist &amp;&amp; !IS_LOCKED_EXPORT) {
+        try { localStorage.setItem(&quot;kalshi_widget_brand&quot;, resolvedKey); } catch (_) {}
       }
     }
 
     function setTheme(mode, persist = true) {
-      const isLight = mode === "light";
-      document.body.classList.toggle("lightTheme", isLight);
-      if (persist && !IS_LOCKED_EXPORT) {
-        try { localStorage.setItem("kalshi_widget_theme", isLight ? "light" : "dark"); } catch (_) {}
+      const isLight = mode === &quot;light&quot;;
+      document.body.classList.toggle(&quot;lightTheme&quot;, isLight);
+      if (persist &amp;&amp; !IS_LOCKED_EXPORT) {
+        try { localStorage.setItem(&quot;kalshi_widget_theme&quot;, isLight ? &quot;light&quot; : &quot;dark&quot;); } catch (_) {}
       }
       if (chart) {
-        const tickColor = isLight ? "rgba(0,0,0,.7)" : "rgba(255,255,255,.7)";
-        const borderColor = isLight ? "rgba(0,0,0,.12)" : "rgba(255,255,255,.12)";
-        const gridColor = isLight ? "rgba(0,0,0,.06)" : "rgba(255,255,255,.06)";
+        const tickColor = isLight ? &quot;rgba(0,0,0,.7)&quot; : &quot;rgba(255,255,255,.7)&quot;;
+        const borderColor = isLight ? &quot;rgba(0,0,0,.12)&quot; : &quot;rgba(255,255,255,.12)&quot;;
+        const gridColor = isLight ? &quot;rgba(0,0,0,.06)&quot; : &quot;rgba(255,255,255,.06)&quot;;
         chart.options.scales.x.ticks.color = tickColor;
         chart.options.scales.y.ticks.color = tickColor;
         chart.options.scales.x.border.color = borderColor;
@@ -1572,29 +2059,29 @@
     }
 
     function closeMenu(menuEl, btnEl) {
-      menuEl.classList.add("hidden");
-      if (btnEl) btnEl.setAttribute("aria-expanded", "false");
+      menuEl.classList.add(&quot;hidden&quot;);
+      if (btnEl) btnEl.setAttribute(&quot;aria-expanded&quot;, &quot;false&quot;);
     }
 
     function toggleMenu(menuEl, btnEl) {
-      const isHidden = menuEl.classList.contains("hidden");
+      const isHidden = menuEl.classList.contains(&quot;hidden&quot;);
       if (isHidden) {
-        menuEl.classList.remove("hidden");
-        if (btnEl) btnEl.setAttribute("aria-expanded", "true");
+        menuEl.classList.remove(&quot;hidden&quot;);
+        if (btnEl) btnEl.setAttribute(&quot;aria-expanded&quot;, &quot;true&quot;);
       } else {
         closeMenu(menuEl, btnEl);
       }
     }
 
     function getCurrentTheme() {
-      return document.body.classList.contains("lightTheme") ? "light" : "dark";
+      return document.body.classList.contains(&quot;lightTheme&quot;) ? &quot;light&quot; : &quot;dark&quot;;
     }
 
     function getLockedExportState() {
-      const marketTicker = activeMode === "market" ? activeMarketTicker : null;
-      const eventTicker = activeMode === "event" ? activeEventTicker : null;
-      if (!marketTicker && !eventTicker) {
-        throw new Error("Load a market or event before exporting locked HTML.");
+      const marketTicker = activeMode === &quot;market&quot; ? activeMarketTicker : null;
+      const eventTicker = activeMode === &quot;event&quot; ? activeEventTicker : null;
+      if (!marketTicker &amp;&amp; !eventTicker) {
+        throw new Error(&quot;Load a market or event before exporting locked HTML.&quot;);
       }
       return {
         exportMode: true,
@@ -1611,34 +2098,34 @@
     function buildLockedExportHtml() {
       const state = getLockedExportState();
       const clonedDoc = document.documentElement.cloneNode(true);
-      const hiddenStyle = document.createElement("style");
-      hiddenStyle.textContent = "#searchWrap{display:none !important;} body{padding:12px !important;}";
-      clonedDoc.querySelector("head").appendChild(hiddenStyle);
+      const hiddenStyle = document.createElement(&quot;style&quot;);
+      hiddenStyle.textContent = &quot;#searchWrap{display:none !important;} html,body{padding:0 !important;margin:0 !important;background:transparent !important;}&quot;;
+      clonedDoc.querySelector(&quot;head&quot;).appendChild(hiddenStyle);
 
-      const clonedBrandMenu = clonedDoc.querySelector("#brandMenu");
-      const clonedHtmlMenu = clonedDoc.querySelector("#htmlMenu");
-      if (clonedBrandMenu) clonedBrandMenu.classList.add("hidden");
-      if (clonedHtmlMenu) clonedHtmlMenu.classList.add("hidden");
+      const clonedBrandMenu = clonedDoc.querySelector(&quot;#brandMenu&quot;);
+      const clonedHtmlMenu = clonedDoc.querySelector(&quot;#htmlMenu&quot;);
+      if (clonedBrandMenu) clonedBrandMenu.classList.add(&quot;hidden&quot;);
+      if (clonedHtmlMenu) clonedHtmlMenu.classList.add(&quot;hidden&quot;);
 
-      const configScript = document.createElement("script");
+      const configScript = document.createElement(&quot;script&quot;);
       configScript.textContent = `window.__KALSHI_EMBED__ = ${JSON.stringify(state)};`;
-      clonedDoc.querySelector("head").appendChild(configScript);
+      clonedDoc.querySelector(&quot;head&quot;).appendChild(configScript);
 
-      return "<!doctype html>\n" + clonedDoc.outerHTML;
+      return &quot;&lt;!doctype html&gt;\n&quot; + clonedDoc.outerHTML;
     }
 
     function downloadCurrentHtml() {
       const html = buildLockedExportHtml();
-      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      const blob = new Blob([html], { type: &quot;text/html;charset=utf-8&quot; });
       const url = URL.createObjectURL(blob);
-      const slug = (activeEventTicker || activeMarketTicker || "kalshi_widget").toLowerCase();
-      const brandSlug = (currentBrandKey || "vegasinsider").toLowerCase();
-      const a = document.createElement("a");
+      const slug = (activeEventTicker || activeMarketTicker || &quot;kalshi_widget&quot;).toLowerCase();
+      const brandSlug = (currentBrandKey || &quot;vegasinsider&quot;).toLowerCase();
+      const a = document.createElement(&quot;a&quot;);
       a.href = url;
       a.download = `kalshi_${brandSlug}_${slug}_locked.html`;
       document.body.appendChild(a);
       a.click();
-      setTimeout(() => {
+      setTimeout(() =&gt; {
         URL.revokeObjectURL(url);
         a.remove();
       }, 0);
@@ -1649,19 +2136,19 @@
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(html);
       } else {
-        const ta = document.createElement("textarea");
+        const ta = document.createElement(&quot;textarea&quot;);
         ta.value = html;
-        ta.style.position = "fixed";
-        ta.style.left = "-9999px";
+        ta.style.position = &quot;fixed&quot;;
+        ta.style.left = &quot;-9999px&quot;;
         document.body.appendChild(ta);
         ta.select();
-        document.execCommand("copy");
+        document.execCommand(&quot;copy&quot;);
         ta.remove();
       }
     }
 
     // UI wiring
-    inputBox.addEventListener("input", () => {
+    inputBox.addEventListener(&quot;input&quot;, () =&gt; {
       const start = inputBox.selectionStart;
       const end = inputBox.selectionEnd;
       const upper = inputBox.value.toUpperCase();
@@ -1671,45 +2158,45 @@
       }
     });
 
-    el("loadBtn").addEventListener("click", () => loadFromInput(inputBox.value));
-    inputBox.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
+    el(&quot;loadBtn&quot;).addEventListener(&quot;click&quot;, () =&gt; loadFromInput(inputBox.value));
+    inputBox.addEventListener(&quot;keydown&quot;, (e) =&gt; {
+      if (e.key === &quot;Enter&quot;) {
         e.preventDefault();
         loadFromInput(inputBox.value);
       }
     });
 
-    sortSelect.addEventListener("change", () => {
+    sortSelect.addEventListener(&quot;change&quot;, () =&gt; {
       if (lastEventMarkets.length) renderMarketsList(lastEventMarkets);
     });
 
-    toggleMarketsBtn.addEventListener("click", () => {
+    toggleMarketsBtn.addEventListener(&quot;click&quot;, () =&gt; {
       if (!lastEventMarkets.length) return;
       marketsExpanded = !marketsExpanded;
       renderMarketsList(lastEventMarkets);
     });
 
-    document.querySelectorAll("[data-range]").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        activeRange = btn.getAttribute("data-range");
+    document.querySelectorAll(&quot;[data-range]&quot;).forEach((btn) =&gt; {
+      btn.addEventListener(&quot;click&quot;, async () =&gt; {
+        activeRange = btn.getAttribute(&quot;data-range&quot;);
         updateRangeButtonsActive();
         try {
-          if (activeMode === "event") await loadEventChart();
-          if (activeMode === "market" && activeMarketTicker) await loadChartForMarketTickers([activeMarketTicker]);
+          if (activeMode === &quot;event&quot;) await loadEventChart();
+          if (activeMode === &quot;market&quot; &amp;&amp; activeMarketTicker) await loadChartForMarketTickers([activeMarketTicker]);
         } catch (e) {
           errEl.textContent = `Chart error:\n${e.message}`;
         }
       });
     });
 
-    document.querySelectorAll("[data-chartmode]").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        if (activeMode !== "event") return;
-        const mode = btn.getAttribute("data-chartmode");
-        if (mode === "selected") {
-          eventChartMode = selectedEventMarketTicker ? "selected" : "default";
+    document.querySelectorAll(&quot;[data-chartmode]&quot;).forEach((btn) =&gt; {
+      btn.addEventListener(&quot;click&quot;, async () =&gt; {
+        if (activeMode !== &quot;event&quot;) return;
+        const mode = btn.getAttribute(&quot;data-chartmode&quot;);
+        if (mode === &quot;selected&quot;) {
+          eventChartMode = selectedEventMarketTicker ? &quot;selected&quot; : &quot;default&quot;;
         } else {
-          eventChartMode = "default";
+          eventChartMode = &quot;default&quot;;
         }
         updateChartModeButtons();
         updateSelectedModeAvailability();
@@ -1723,62 +2210,62 @@
       });
     });
 
-    const brandBtn = el("brandBtn");
-    const brandMenu = el("brandMenu");
-    brandBtn.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); toggleMenu(brandMenu, brandBtn); });
-    brandMenu.addEventListener("click", (e) => {
-      const opt = e.target.closest(".brandOpt");
+    const brandBtn = el(&quot;brandBtn&quot;);
+    const brandMenu = el(&quot;brandMenu&quot;);
+    brandBtn.addEventListener(&quot;click&quot;, (e) =&gt; { e.preventDefault(); e.stopPropagation(); toggleMenu(brandMenu, brandBtn); });
+    brandMenu.addEventListener(&quot;click&quot;, (e) =&gt; {
+      const opt = e.target.closest(&quot;.brandOpt&quot;);
       if (!opt) return;
-      applyBrand(opt.getAttribute("data-brand"));
+      applyBrand(opt.getAttribute(&quot;data-brand&quot;));
       closeMenu(brandMenu, brandBtn);
     });
 
-    const themeBtn = el("themeBtn");
-    themeBtn.addEventListener("click", () => {
-      setTheme(document.body.classList.contains("lightTheme") ? "dark" : "light");
+    const themeBtn = el(&quot;themeBtn&quot;);
+    themeBtn.addEventListener(&quot;click&quot;, () =&gt; {
+      setTheme(document.body.classList.contains(&quot;lightTheme&quot;) ? &quot;dark&quot; : &quot;light&quot;);
     });
 
-    const htmlBtn = el("downloadHtmlBtn");
-    const htmlMenu = el("htmlMenu");
-    htmlBtn.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); toggleMenu(htmlMenu, htmlBtn); });
-    el("htmlDownloadOpt").addEventListener("click", (e) => {
+    const htmlBtn = el(&quot;downloadHtmlBtn&quot;);
+    const htmlMenu = el(&quot;htmlMenu&quot;);
+    htmlBtn.addEventListener(&quot;click&quot;, (e) =&gt; { e.preventDefault(); e.stopPropagation(); toggleMenu(htmlMenu, htmlBtn); });
+    el(&quot;htmlDownloadOpt&quot;).addEventListener(&quot;click&quot;, (e) =&gt; {
       e.preventDefault(); e.stopPropagation(); closeMenu(htmlMenu, htmlBtn); downloadCurrentHtml();
     });
-    el("htmlCopyOpt").addEventListener("click", async (e) => {
+    el(&quot;htmlCopyOpt&quot;).addEventListener(&quot;click&quot;, async (e) =&gt; {
       e.preventDefault(); e.stopPropagation(); closeMenu(htmlMenu, htmlBtn);
       try {
         await copyCurrentHtml();
-        htmlBtn.textContent = "Copied ✓";
-        setTimeout(() => { htmlBtn.textContent = "HTML ▾"; }, 900);
+        htmlBtn.textContent = &quot;Copied ✓&quot;;
+        setTimeout(() =&gt; { htmlBtn.textContent = &quot;HTML ▾&quot;; }, 900);
       } catch (err) {
         alert(err.message || String(err));
       }
     });
 
-    document.addEventListener("click", () => {
+    document.addEventListener(&quot;click&quot;, () =&gt; {
       closeMenu(brandMenu, brandBtn);
       closeMenu(htmlMenu, htmlBtn);
     });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
+    document.addEventListener(&quot;keydown&quot;, (e) =&gt; {
+      if (e.key === &quot;Escape&quot;) {
         closeMenu(brandMenu, brandBtn);
         closeMenu(htmlMenu, htmlBtn);
       }
     });
 
     // Restore settings
-    const bootBrand = EMBED_CONFIG?.brand || params.get("brand") || (() => {
-      try { return localStorage.getItem("kalshi_widget_brand") || "vegasinsider"; } catch (_) { return "vegasinsider"; }
+    const bootBrand = EMBED_CONFIG?.brand || params.get(&quot;brand&quot;) || (() =&gt; {
+      try { return localStorage.getItem(&quot;kalshi_widget_brand&quot;) || &quot;vegasinsider&quot;; } catch (_) { return &quot;vegasinsider&quot;; }
     })();
-    const bootTheme = EMBED_CONFIG?.theme || params.get("theme") || (() => {
-      try { return localStorage.getItem("kalshi_widget_theme") || "dark"; } catch (_) { return "dark"; }
+    const bootTheme = EMBED_CONFIG?.theme || params.get(&quot;theme&quot;) || (() =&gt; {
+      try { return localStorage.getItem(&quot;kalshi_widget_theme&quot;) || &quot;dark&quot;; } catch (_) { return &quot;dark&quot;; }
     })();
     applyBrand(bootBrand, !IS_LOCKED_EXPORT);
     setTheme(bootTheme, !IS_LOCKED_EXPORT);
     applyLockedExportChrome();
 
     activeRange = EMBED_CONFIG?.range || activeRange;
-    if (EMBED_CONFIG?.eventChartMode === "selected" || EMBED_CONFIG?.eventChartMode === "default") {
+    if (EMBED_CONFIG?.eventChartMode === &quot;selected&quot; || EMBED_CONFIG?.eventChartMode === &quot;default&quot;) {
       eventChartMode = EMBED_CONFIG.eventChartMode;
     }
     if (EMBED_CONFIG?.selectedEventMarketTicker) {
@@ -1790,8 +2277,8 @@
     updateSelectedModeAvailability();
 
     // Boot from locked export config or URL if available
-    const bootEvent = (EMBED_CONFIG?.eventTicker || params.get("event") || "").trim();
-    const bootTicker = (EMBED_CONFIG?.marketTicker || params.get("ticker") || "").trim();
+    const bootEvent = (EMBED_CONFIG?.eventTicker || params.get(&quot;event&quot;) || &quot;&quot;).trim();
+    const bootTicker = (EMBED_CONFIG?.marketTicker || params.get(&quot;ticker&quot;) || &quot;&quot;).trim();
     if (bootEvent) {
       if (inputBox) inputBox.value = bootEvent.toUpperCase();
       loadEvent(bootEvent.toUpperCase());
@@ -1801,19 +2288,49 @@
     }
 
     // Auto refresh
-    setInterval(async () => {
+    setInterval(async () =&gt; {
       if (document.hidden) return;
       try {
-        if (activeMode === "market") {
+        if (activeMode === &quot;market&quot;) {
           await refreshActiveMarketSnapshot();
           if (activeMarketTicker) await loadChartForMarketTickers([activeMarketTicker]);
-        } else if (activeMode === "event") {
+        } else if (activeMode === &quot;event&quot;) {
           await refreshActiveEventList();
           await loadEventChart();
         }
       } catch (_) {}
     }, AUTO_REFRESH_MS);
-  </script>
+  &lt;/script&gt;
 
 
-</body></html>
+&lt;/body&gt;&lt;/html&gt;"></iframe>
+</div>
+
+<script>
+(function(){
+  const frame = document.getElementById('viKalshiMarketFrame');
+  if (!frame) return;
+
+  function resizeKalshiFrame(){
+    try {
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      if (!doc) return;
+      const card = doc.getElementById('widgetCard');
+      const h = Math.ceil((card ? card.getBoundingClientRect().height : doc.documentElement.scrollHeight) + 2);
+      if (h > 300) frame.style.height = h + 'px';
+    } catch (_) {}
+  }
+
+  frame.addEventListener('load', function(){
+    resizeKalshiFrame();
+    let ticks = 0;
+    const timer = setInterval(function(){
+      resizeKalshiFrame();
+      ticks += 1;
+      if (ticks > 24) clearInterval(timer);
+    }, 350);
+  });
+
+  window.addEventListener('resize', resizeKalshiFrame);
+})();
+</script>
