@@ -1,0 +1,1819 @@
+<!doctype html>
+<html lang="en" style="--brand-accent: #F2C23A; --brand-accent-2: #D9A72A; --brand-accent-rgb: 242,194,58;"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kalshi Market Widget</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
+
+  <style>
+    :root{
+      --vi-yellow:#F2C23A;
+      --vi-yellow-2:#D9A72A;
+      --vi-yellow-soft: rgba(242,194,58,.18);
+      --vi-yellow-soft-2: rgba(242,194,58,.10);
+      --vi-black:#111111;
+      --vi-bg:#0b0b0b;
+      --vi-panel:#111111;
+      --vi-panel-2:#161616;
+      --vi-border:#2a2a2a;
+      --vi-text:#ffffff;
+      --vi-muted: rgba(255,255,255,.72);
+      --vi-muted2: rgba(255,255,255,.55);
+      --brand-accent:#F2C23A;
+      --brand-accent-2:#D9A72A;
+      --brand-accent-rgb:242,194,58;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+
+    body.lightTheme{
+      --vi-bg:#f7f7f8;
+      --vi-panel:#ffffff;
+      --vi-panel-2:#f2f2f3;
+      --vi-border:rgba(0,0,0,.12);
+      --vi-text:#111111;
+      --vi-muted:rgba(0,0,0,.68);
+      --vi-muted2:rgba(0,0,0,.52);
+    }
+
+    body{ margin:0; padding:16px; background:var(--vi-bg); color:var(--vi-text); }
+
+    .searchWrap, .card{ max-width:980px; margin:0 auto; }
+    .searchInner, .card{
+      background:var(--vi-panel);
+      border-radius:16px;
+      border:1px solid rgba(var(--brand-accent-rgb), .18);
+      box-shadow:0 18px 44px rgba(0,0,0,.32);
+    }
+    .searchInner{ padding:16px; margin-bottom:14px; }
+    .card{ padding:16px; display:none; }
+
+    .row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .searchTitleRow{ display:flex; align-items:center; gap:12px; }
+    .searchTitle{ flex:1 1 auto; font-size:20px; font-weight:900; color:var(--vi-text); }
+    .searchHint{ margin-top:10px; font-size:13px; color:var(--vi-muted); }
+
+    .searchInputRow{ display:flex; gap:12px; align-items:center; margin-top:10px; }
+    .searchInputRow > div:first-child{ flex:1 1 auto; min-width:0; }
+    .loadWrap{ flex:0 0 auto; }
+    @media (max-width:520px){
+      .searchInputRow{ flex-wrap:wrap; }
+      .loadWrap, #loadBtn{ width:100%; }
+    }
+
+    input{
+      width:100%; box-sizing:border-box; padding:10px 12px; border-radius:10px;
+      border:1px solid var(--vi-border); background:rgba(255,255,255,.04); color:var(--vi-text);
+    }
+    body.lightTheme input{ background:rgba(0,0,0,.04); }
+    input::placeholder{ color:rgba(255,255,255,.45); }
+    body.lightTheme input::placeholder{ color:rgba(0,0,0,.45); }
+
+    button, .smallSelect, select{
+      padding:10px 12px; border-radius:10px; border:1px solid var(--vi-border);
+      background:rgba(255,255,255,.06); color:var(--vi-text); cursor:pointer; font-weight:750;
+    }
+    body.lightTheme button, body.lightTheme .smallSelect, body.lightTheme select{
+      background:rgba(0,0,0,.06); color:#111;
+    }
+    #loadBtn, .btnSmall.active, .btnSmall.isActive, .toggleBtn{
+      background:var(--brand-accent); border-color:var(--brand-accent-2); color:#000;
+    }
+    #loadBtn:hover, .btnSmall.active:hover, .btnSmall.isActive:hover, .toggleBtn:hover{ background:var(--brand-accent-2); }
+    .miniBtn{ padding:8px 12px; border-radius:999px; white-space:nowrap; }
+
+    .ddWrap{ position:relative; display:inline-block; }
+    .brandMenu, .htmlMenu{
+      position:absolute; right:0; top:calc(100% + 10px); min-width:220px; z-index:10000;
+      background:#0f1012; border:1px solid rgba(255,255,255,.22); border-radius:14px;
+      box-shadow:0 14px 36px rgba(0,0,0,.55); padding:10px; display:flex; flex-direction:column; gap:8px;
+    }
+    .brandMenu.hidden, .htmlMenu.hidden{ display:none !important; }
+    .brandOpt, .htmlOpt{
+      width:100%; text-align:left; border-radius:12px; border:1px solid rgba(255,255,255,.55);
+      background:rgba(255,255,255,.06); color:#fff; padding:10px 12px; cursor:pointer; font-weight:600;
+    }
+    .brandOpt:hover, .htmlOpt:hover{ background:rgba(255,255,255,.10); }
+
+    .pill{
+      padding:8px 12px; border-radius:999px; background:rgba(var(--brand-accent-rgb), .12);
+      border:1px solid rgba(var(--brand-accent-rgb), .28); color:var(--vi-text); font-size:12px;
+    }
+    .brandPill{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:0;
+      min-height:44px;
+      padding:10px 14px;
+    }
+    .viLogo{
+      height:28px;
+      width:auto;
+      max-width:180px;
+      display:block;
+      object-fit:contain;
+      background:rgba(255,255,255,.92);
+      padding:6px 10px;
+      border-radius:10px;
+    }
+    .brandText{
+      display:none;
+    }
+
+    .headerRow{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:8px; }
+    .eventTopTitle{
+      display:none; align-items:baseline; gap:12px; flex:1; min-width:180px; margin:0; padding:2px 0;
+      color:var(--brand-accent); font-size:28px; line-height:1.12; font-weight:900; letter-spacing:-.02em;
+      text-shadow:0 1px 0 rgba(0,0,0,.35);
+    }
+    .eventTopPct, .chancePct{ font-weight:900; white-space:nowrap; }
+    .eventTopPct{ font-size:22px; color:rgba(255,255,255,.92); }
+    .chancePct{ margin-left:10px; font-size:20px; color:var(--brand-accent); }
+
+    .muted{ color:var(--vi-muted); font-size:13px; margin-top:10px; }
+    .err{ color:#ff6b6b; font-size:13px; margin-top:10px; white-space:pre-wrap; }
+    .debug{
+      margin-top:12px; display:none; overflow:auto; font-size:12px; line-height:1.4;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      background:#0f0f0f; border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:10px;
+      color:rgba(255,255,255,.8);
+    }
+    body.lightTheme .debug{ background:#fff; color:#111; border-color:rgba(0,0,0,.12); }
+
+    .statsBar{ display:none; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .statTile{
+      flex:1 1 220px; min-width:200px; border-radius:14px; padding:12px 14px;
+      background:linear-gradient(180deg, rgba(var(--brand-accent-rgb), .98), rgba(var(--brand-accent-rgb), .88));
+      border:1px solid rgba(0,0,0,.18); color:#000; box-shadow:0 10px 24px rgba(0,0,0,.22);
+      position:relative;
+    }
+    .statLabel{ font-size:12px; color:rgba(0,0,0,.72); font-weight:800; letter-spacing:.3px; }
+    .statValue{ margin-top:4px; font-size:22px; font-weight:900; color:#000; letter-spacing:.2px; }
+
+    .hasTip::after, .hasTip::before{ opacity:0; pointer-events:none; transition:opacity .12s ease; }
+    .hasTip:hover::after, .hasTip:hover::before{ opacity:1; }
+    .hasTip::after{
+      content:attr(data-tooltip); position:absolute; left:12px; top:100%; margin-top:10px; min-width:320px; max-width:520px;
+      background:rgba(15,17,21,.96); color:#fff; font-size:12px; line-height:1.35; padding:10px 12px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.14); box-shadow:0 10px 26px rgba(0,0,0,.25); z-index:50; white-space:normal;
+    }
+    .hasTip::before{
+      content:""; position:absolute; left:26px; top:100%; margin-top:4px; width:10px; height:10px;
+      background:rgba(15,17,21,.96); border-left:1px solid rgba(255,255,255,.14); border-top:1px solid rgba(255,255,255,.14);
+      transform:rotate(45deg); z-index:51;
+    }
+
+    .notionalRow{ display:none; justify-content:center; margin-top:10px; }
+    .notionalPill{
+      display:inline-flex; align-items:center; gap:10px; padding:8px 12px; border-radius:999px;
+      background:rgba(var(--brand-accent-rgb), .10); border:1px solid rgba(var(--brand-accent-rgb), .30);
+      color:var(--vi-text); font-weight:800; box-shadow:0 10px 22px rgba(0,0,0,.22);
+    }
+    .notionalLabel{ color:var(--vi-muted); font-weight:850; }
+    body.lightTheme .notionalLabel{ color:rgba(0,0,0,.68); }
+    .notionalYes, .notionalNo{ font-weight:900; }
+    .notionalSep{ color:var(--vi-muted2); font-weight:900; }
+
+    .legendRow{ display:none; gap:18px; flex-wrap:wrap; align-items:center; margin-top:6px; margin-bottom:-8px; }
+    .legendItem{ display:flex; align-items:center; gap:10px; font-size:16px; font-weight:650; color:var(--vi-text); }
+    .dot{ width:10px; height:10px; border-radius:999px; display:inline-block; }
+    .legendPct{ font-weight:850; color:var(--vi-text); margin-left:6px; }
+
+    .chartWrap{ display:none; margin-top:4px; }
+    .chartHeader{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-top:8px; }
+    .chartTitle{ font-weight:650; color:var(--vi-text); }
+    .btnGroup{ display:flex; gap:8px; flex-wrap:wrap; }
+    .btnSmall{ padding:6px 10px; font-size:12px; border-radius:999px; }
+    .btnSmall.isDisabled{ opacity:.55; }
+    .chartBox{
+      margin-top:8px; border:1px solid rgba(255,255,255,.22); border-radius:16px; padding:12px; background:#0f1115; overflow:hidden;
+    }
+    body.lightTheme .chartBox{ background:#fff; border-color:rgba(0,0,0,.12); }
+    canvas{ width:100% !important; height:360px !important; }
+    .chartMetaDark{ color:var(--vi-muted); font-size:12px; margin-top:8px; line-height:1.35; word-break:break-word; }
+
+    .grid{ display:none; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
+    .box{
+      border:1px solid rgba(0,0,0,.18); border-radius:14px; padding:14px;
+      background:linear-gradient(180deg, rgba(var(--brand-accent-rgb), .98), rgba(var(--brand-accent-rgb), .88));
+      box-shadow:0 10px 24px rgba(0,0,0,.22), 0 0 0 1px rgba(0,0,0,.08) inset;
+    }
+    .label{ font-size:12px; letter-spacing:.2px; color:rgba(0,0,0,.72); margin-bottom:6px; font-weight:800; }
+    .value{ font-size:22px; font-weight:900; color:#000; }
+
+    .listWrap{ margin-top:12px; display:none; }
+    .listHeader{ display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:10px; }
+    .listTitle{ font-weight:650; color:var(--vi-text); }
+    .tag{
+      display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px;
+      background:rgba(var(--brand-accent-rgb), .10); border:1px solid rgba(var(--brand-accent-rgb), .28); color:var(--vi-text);
+    }
+    body.lightTheme .tag{ color:#111; }
+    table{ width:100%; border-collapse:separate; border-spacing:0; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,.10); }
+    body.lightTheme table{ border-color:rgba(0,0,0,.10); }
+    th, td{ text-align:left; padding:10px; border-top:1px solid rgba(255,255,255,.10); vertical-align:top; color:var(--vi-text); }
+    body.lightTheme th, body.lightTheme td{ border-top-color:rgba(0,0,0,.10); }
+    th{ font-size:12px; font-weight:700; }
+    thead th{ background:var(--brand-accent); color:#000; border-top:none; border-bottom:1px solid rgba(0,0,0,.25); }
+    thead th:first-child{ border-top-left-radius:12px; }
+    thead th:last-child{ border-top-right-radius:12px; }
+    td{ font-size:13px; }
+    .tickerCell{ font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:12px; color:var(--vi-muted); }
+    .clickable{ cursor:pointer; }
+    .clickable:hover{ background:var(--vi-yellow-soft-2); }
+    .selectedRow{ background:var(--vi-yellow-soft) !important; }
+    body.lightTheme .tickerCell{ color:rgba(0,0,0,.72); }
+
+
+    /* --- Locked VegasInsider chart-only polish --- */
+    html, body{
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
+    }
+    body{
+      padding:0 !important;
+      background:#070809;
+    }
+    .card{
+      max-width:1280px;
+      margin:0 auto;
+      padding:28px 30px 32px;
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(242,194,58,.10), transparent 30%),
+        linear-gradient(180deg, #111315 0%, #0b0c0e 100%);
+      border:1px solid rgba(242,194,58,.26);
+      box-shadow:0 24px 70px rgba(0,0,0,.46), 0 0 0 1px rgba(255,255,255,.025) inset;
+    }
+    .eventTopTitle{
+      font-size:clamp(34px, 4.2vw, 52px);
+      line-height:1.05;
+      letter-spacing:-.035em;
+      margin-bottom:14px;
+    }
+    .brandPill{
+      min-height:56px;
+      padding:10px 16px;
+      border-radius:999px;
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border:1px solid rgba(242,194,58,.34);
+      box-shadow:0 14px 34px rgba(0,0,0,.35);
+    }
+    .viLogo{
+      height:34px;
+      max-width:225px;
+      padding:9px 18px;
+      border-radius:14px;
+      background:#fff;
+    }
+    .muted#meta{
+      font-size:16px;
+      margin:4px 0 16px;
+      color:rgba(255,255,255,.78);
+    }
+    .statsBar{
+      gap:18px;
+      margin-top:16px;
+    }
+    .statTile{
+      border-radius:18px;
+      padding:18px 20px;
+      min-height:72px;
+      background:linear-gradient(180deg, #F5CE55 0%, #E1B640 100%);
+      box-shadow:0 18px 34px rgba(0,0,0,.30), 0 1px 0 rgba(255,255,255,.23) inset;
+    }
+    .statLabel{
+      font-size:14px;
+      letter-spacing:.55px;
+      color:rgba(0,0,0,.76);
+    }
+    .statValue{
+      font-size:28px;
+      line-height:1.05;
+      margin-top:10px;
+      letter-spacing:.04em;
+    }
+    .notionalRow{
+      margin-top:18px;
+      margin-bottom:14px;
+    }
+    .notionalPill{
+      padding:11px 22px;
+      border-radius:999px;
+      font-size:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+      border:1px solid rgba(242,194,58,.32);
+      box-shadow:0 16px 36px rgba(0,0,0,.38);
+    }
+    .legendRow{
+      gap:28px;
+      margin:8px 0 8px;
+    }
+    .legendItem{
+      gap:12px;
+      font-size:18px;
+      color:rgba(255,255,255,.83);
+    }
+    .legendPct{
+      font-size:19px;
+      color:#fff;
+      margin-left:2px;
+      font-weight:900;
+    }
+    .dot{
+      width:11px;
+      height:11px;
+      box-shadow:0 0 12px currentColor;
+    }
+    .chartWrap{
+      margin-top:6px;
+    }
+    .chartHeader{
+      display:grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items:center;
+      margin-top:6px;
+      margin-bottom:10px;
+    }
+    .chartTitle{
+      justify-self:start;
+      font-size:20px;
+      font-weight:900;
+      color:#fff;
+    }
+    .chartHeader > .btnGroup:first-of-type{
+      justify-self:center;
+    }
+    .btnGroup:has([data-chartmode]),
+    [data-chartmode]{
+      display:none !important;
+    }
+    .btnSmall{
+      padding:8px 16px;
+      font-size:14px;
+      border-radius:999px;
+      background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.035));
+      border:1px solid rgba(255,255,255,.12);
+      color:#f7f7f7;
+      box-shadow:0 10px 22px rgba(0,0,0,.26);
+    }
+    .btnSmall.active{
+      background:linear-gradient(180deg, #F5CE55 0%, #E1B640 100%);
+      border-color:rgba(242,194,58,.72);
+      color:#000;
+    }
+    .chartBox{
+      margin-top:8px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:24px;
+      padding:28px 26px 22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012)),
+        #111317;
+      box-shadow:0 18px 48px rgba(0,0,0,.36), 0 0 0 1px rgba(255,255,255,.02) inset;
+    }
+    canvas{
+      height:430px !important;
+    }
+    .chartMetaDark,
+    .grid,
+    .listWrap{
+      display:none !important;
+    }
+    .err:empty,
+    .debug:empty{
+      display:none !important;
+    }
+    @media (max-width:760px){
+      .card{ padding:18px 16px 20px; border-radius:20px; }
+      .headerRow{ align-items:flex-start; }
+      .brandPill{ transform:scale(.82); transform-origin:top right; }
+      .statsBar{ gap:10px; }
+      .statTile{ min-width:100%; }
+      .notionalPill{ font-size:14px; flex-wrap:wrap; justify-content:center; }
+      .legendRow{ gap:14px; }
+      .legendItem{ font-size:14px; }
+      .chartHeader{ grid-template-columns:1fr; gap:10px; }
+      .chartHeader > .btnGroup:first-of-type{ justify-self:start; }
+      .chartBox{ padding:18px 12px 14px; border-radius:18px; }
+      canvas{ height:340px !important; }
+    }
+  </style>
+<style data-emotion="css" data-s=""></style><style>#searchWrap{display:none !important;} body{padding:0 !important;background:#070809 !important;}</style><script>window.__KALSHI_EMBED__ = {"exportMode":true,"brand":"vegasinsider","theme":"dark","range":"all","eventChartMode":"default","selectedEventMarketTicker":null,"marketTicker":null,"eventTicker":"KXAMERICANIDOL-26DEC31"};</script></head>
+<body cz-shortcut-listen="true">
+  <div class="searchWrap" id="searchWrap" style="display: block;">
+    <div class="searchInner">
+      <div class="searchTitleRow">
+        <div class="searchTitle" id="title">Enter a market ticker or event ticker</div>
+        <button class="miniBtn" id="themeBtn" type="button">Theme</button>
+        <div class="ddWrap" id="brandDD">
+          <button class="miniBtn" id="brandBtn" type="button" aria-haspopup="menu" aria-expanded="false">Brand ▾</button>
+          <div id="brandMenu" class="brandMenu hidden" role="menu" aria-label="Brand Menu">
+            <button type="button" class="brandOpt" data-brand="vegasinsider">VegasInsider</button>
+            <button type="button" class="brandOpt" data-brand="actionnetwork">Action Network</button>
+            <button type="button" class="brandOpt" data-brand="canadasb">Canada Sports Betting</button>
+            <button type="button" class="brandOpt" data-brand="rotogrinders">RotoGrinders</button>
+          </div>
+        </div>
+        <div class="ddWrap" id="htmlDD">
+          <button class="miniBtn" id="downloadHtmlBtn" type="button" aria-haspopup="menu" aria-expanded="false">HTML ▾</button>
+          <div id="htmlMenu" class="htmlMenu hidden" role="menu" aria-label="HTML Menu">
+            <button type="button" class="htmlOpt" id="htmlDownloadOpt">Download locked HTML</button>
+            <button type="button" class="htmlOpt" id="htmlCopyOpt">Copy locked HTML</button>
+          </div>
+        </div>
+      </div>
+      <div class="row searchInputRow">
+        <div>
+          <input id="inputBox" placeholder="Market ticker OR event ticker (e.g. KXMARMAD-26 or KXFEDCHAIRNOM-29)" data-sharkid="__0">
+        </div>
+        <div class="loadWrap">
+          <button id="loadBtn">Load</button>
+        </div>
+      </div>
+      <div class="searchHint">Paste a Kalshi market ticker or event ticker from the end of the URL.</div>
+    </div>
+  </div>
+
+  <div class="card" id="widgetCard" style="--brand-accent: #F2C23A; --brand-accent-2: #D9A72A; --brand-accent-rgb: 242,194,58; display: block;">
+    <div class="row headerRow">
+      <div class="eventTopTitle" id="eventTopTitle" style="display: flex;"><span id="eventTopTitleText">Who will win American Idol?</span><span class="eventTopPct" id="eventTopPct" style="display:none;"></span></div>
+      <div class="pill brandPill">
+        <img class="viLogo" id="brandLogo" src="https://i.postimg.cc/VkynWsGQ/VI-logo-Dark.png" alt="VegasInsider">
+      </div>
+    </div>
+
+    <div class="muted" id="meta">Event: KXAMERICANIDOL-26DEC31 • Showing 30 markets</div>
+
+    <div class="row statsBar" id="statsBar" style="display: flex;">
+      <div class="statTile hasTip" data-tooltip="Volume (Total): all contracts traded since this market opened.">
+        <div class="statLabel" id="volLabel">VOLUME (TOTAL)</div>
+        <div class="statValue" id="statVol">814,379</div>
+      </div>
+      <div class="statTile hasTip" data-tooltip="Volume (24H): contracts traded in the last 24 hours.">
+        <div class="statLabel" id="vol24Label">VOLUME (24H)</div>
+        <div class="statValue" id="statVol24">19,768</div>
+      </div>
+      <div class="statTile hasTip" data-tooltip="Open Interest: contracts currently being held.">
+        <div class="statLabel">OPEN INTEREST</div>
+        <div class="statValue" id="statOI">664,664</div>
+      </div>
+    </div>
+
+    <div class="notionalRow" id="notionalRow" style="display: flex;">
+      <div class="notionalPill hasTip" data-tooltip="Numbers update from the trades endpoint. This split may differ slightly from the headline 24H volume due to timing and rounding.">
+        <span class="notionalLabel" id="notionalLabel">24H Contracts Split (All markets):</span>
+        <span class="notionalYes" id="notionalYes">YES 12,602</span>
+        <span class="notionalSep">•</span>
+        <span class="notionalNo" id="notionalNo">NO 7,143</span>
+      </div>
+    </div>
+
+    <div class="legendRow" id="legendRow" style="display: flex;"><div class="legendItem"><span class="dot" style="background:#20c997"></span><span>Hannah Harper</span><span class="legendPct">74%</span></div><div class="legendItem"><span class="dot" style="background:#3b82f6"></span><span>Jordan McCullough</span><span class="legendPct">16%</span></div><div class="legendItem"><span class="dot" style="background:#f97316"></span><span>Keyla Richardson</span><span class="legendPct">10%</span></div></div>
+
+    <div class="chartWrap" id="chartWrap" style="display: block;">
+      <div class="chartHeader">
+        <div class="chartTitle" id="chartTitle"><span>Chance</span><span class="chancePct" id="chancePct" style="display:none;"></span></div>
+        <div class="btnGroup">
+          <button class="btnSmall" data-range="live">LIVE</button>
+          <button class="btnSmall" data-range="1d">1D</button>
+          <button class="btnSmall" data-range="1w">1W</button>
+          <button class="btnSmall" data-range="1m">1M</button>
+          <button class="btnSmall" data-range="1y">1Y</button>
+          <button class="btnSmall active" data-range="all">ALL</button>
+        </div>
+      </div>
+      <div class="chartBox">
+        <canvas id="priceChart" height="576" style="display: block; box-sizing: border-box; height: 384px; width: 954px;" width="1432"></canvas>
+        <div class="chartMetaDark" id="chartMeta"></div>
+      </div>
+    </div>
+
+    <div class="grid" id="grid" style="display: none;">
+      <div class="box"><div class="label">YES bid / ask</div><div class="value" id="yesBidAsk">—</div></div>
+      <div class="box"><div class="label">NO bid / ask</div><div class="value" id="noBidAsk">—</div></div>
+      <div class="box"><div class="label">Last price</div><div class="value" id="lastPrice">—</div></div>
+      <div class="box"><div class="label">Volume</div><div class="value" id="volume">—</div></div>
+    </div>
+
+    <div class="listWrap" id="listWrap" style="display: none;">
+      <div class="listHeader">
+        <div class="listTitle" id="listTitle">Entertainment</div>
+        <div class="row">
+          <span class="tag" id="countTag">Top 5 of 30</span>
+          <button class="smallSelect toggleBtn" id="toggleMarketsBtn" type="button" style="display: inline-block;">Show all</button>
+          <select class="smallSelect" id="sortSelect" data-sharkid="__1">
+            <option value="yes_desc">Sort: YES bid (high → low)</option>
+            <option value="yes_asc">Sort: YES bid (low → high)</option>
+            <option value="vol_desc">Sort: Volume (high → low)</option>
+            <option value="title_asc">Sort: Title (A → Z)</option>
+          </select>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:42%;">Market</th>
+            <th style="width:18%;">YES (bid/ask)</th>
+            <th style="width:18%;">NO (bid/ask)</th>
+            <th style="width:10%;">Vol</th>
+            <th style="width:12%;">Ticker</th>
+          </tr>
+        </thead>
+        <tbody id="marketsTbody"><tr class="clickable" data-ticker="KXAMERICANIDOL-26DEC31-HAN">
+          <td>Will Hannah Harper win American Idol Season 24 (ABC Season 9)?</td>
+          <td>73¢ / 74¢</td>
+          <td>26¢ / 27¢</td>
+          <td>86819.52</td>
+          <td class="tickerCell">KXAMERICANIDOL-26DEC31-HAN</td>
+        </tr><tr class="clickable" data-ticker="KXAMERICANIDOL-26DEC31-JOR">
+          <td>Will Jordan McCullough win American Idol Season 24 (ABC Season 9)?</td>
+          <td>15¢ / 17¢</td>
+          <td>83¢ / 85¢</td>
+          <td>85510.51</td>
+          <td class="tickerCell">KXAMERICANIDOL-26DEC31-JOR</td>
+        </tr><tr class="clickable" data-ticker="KXAMERICANIDOL-26DEC31-KEY">
+          <td>Will Keyla Richardson win American Idol Season 24 (ABC Season 9)?</td>
+          <td>9¢ / 10¢</td>
+          <td>90¢ / 91¢</td>
+          <td>91492.34</td>
+          <td class="tickerCell">KXAMERICANIDOL-26DEC31-KEY</td>
+        </tr><tr class="clickable" data-ticker="KXAMERICANIDOL-26DEC31-KYN">
+          <td>Will Kyndal Inskeep win American Idol Season 24 (ABC Season 9)?</td>
+          <td>0¢ / 1¢</td>
+          <td>99¢ / 100¢</td>
+          <td>55055.34</td>
+          <td class="tickerCell">KXAMERICANIDOL-26DEC31-KYN</td>
+        </tr><tr class="clickable" data-ticker="KXAMERICANIDOL-26DEC31-MIC">
+          <td>Will Michael Garner win American Idol Season 24 (ABC Season 9)?</td>
+          <td>0¢ / 1¢</td>
+          <td>99¢ / 100¢</td>
+          <td>15</td>
+          <td class="tickerCell">KXAMERICANIDOL-26DEC31-MIC</td>
+        </tr></tbody>
+      </table>
+      <div class="muted">Tip: click any row to update the chart to that market.</div>
+    </div>
+
+    <div class="err" id="error"></div>
+    <div class="debug" id="debugBox" style="display: none;"></div>
+  </div>
+
+  <script>
+    const BASE = "https://kalshi-proxy.gmarthandan.workers.dev/api";
+    const params = new URLSearchParams(location.search);
+    const DEBUG = params.get("debug") === "1";
+    const EMBED_CONFIG = (window.__KALSHI_EMBED__ && typeof window.__KALSHI_EMBED__ === "object") ? window.__KALSHI_EMBED__ : null;
+    const IS_LOCKED_EXPORT = !!(EMBED_CONFIG && EMBED_CONFIG.exportMode);
+    const AUTO_REFRESH_MINUTES = 30;
+    const AUTO_REFRESH_MS = AUTO_REFRESH_MINUTES * 60 * 1000;
+    const MAX_MARKETS_COLLAPSED = 5;
+
+    const BRAND_PRESETS = {
+      vegasinsider: { name: "VegasInsider", accent: "#F2C23A", accent2: "#D9A72A", rgb: "242,194,58", logo: "https://i.postimg.cc/VkynWsGQ/VI-logo-Dark.png" },
+      actionnetwork: { name: "Action Network", accent: "#00C853", accent2: "#00A947", rgb: "0,200,83", logo: "https://i.postimg.cc/x1nG117r/AN-final2-logo.png" },
+      canadasb: { name: "Canada Sports Betting", accent: "#EF4444", accent2: "#DC2626", rgb: "239,68,68", logo: "https://i.postimg.cc/25nqwgcw/csb-text-all-red.png" },
+      rotogrinders: { name: "RotoGrinders", accent: "#2F7DF3", accent2: "#0159D1", rgb: "47,125,243", logo: "https://i.postimg.cc/PrcJnQtK/RG-logo-Fn.png" }
+    };
+
+    const el = (id) => document.getElementById(id);
+    const titleEl = el("title");
+    const widgetCardEl = el("widgetCard");
+    const searchWrapEl = el("searchWrap");
+    const inputBox = el("inputBox");
+    const metaEl = el("meta");
+    const errEl = el("error");
+    const debugBox = el("debugBox");
+    const gridEl = el("grid");
+    const yesBidAskEl = el("yesBidAsk");
+    const noBidAskEl = el("noBidAsk");
+    const lastPriceEl = el("lastPrice");
+    const volumeEl = el("volume");
+    const eventTopTitleEl = el("eventTopTitle");
+    const eventTopTitleTextEl = el("eventTopTitleText");
+    const eventTopPctEl = el("eventTopPct");
+    const chancePctEl = el("chancePct");
+    const statsBar = el("statsBar");
+    const volLabel = el("volLabel");
+    const vol24Label = el("vol24Label");
+    const statVol = el("statVol");
+    const statVol24 = el("statVol24");
+    const statOI = el("statOI");
+    const notionalRow = el("notionalRow");
+    const notionalLabelEl = el("notionalLabel");
+    const notionalYesEl = el("notionalYes");
+    const notionalNoEl = el("notionalNo");
+    const chartWrap = el("chartWrap");
+    const chartMeta = el("chartMeta");
+    const legendRow = el("legendRow");
+    const listWrap = el("listWrap");
+    const listTitle = el("listTitle");
+    const countTag = el("countTag");
+    const marketsTbody = el("marketsTbody");
+    const sortSelect = el("sortSelect");
+    const toggleMarketsBtn = el("toggleMarketsBtn");
+    const brandLogo = el("brandLogo");
+
+    let currentBrandKey = "vegasinsider";
+
+    let chart = null;
+    let activeMode = null; // market | event
+    let activeMarketTicker = null;
+    let activeEventTicker = null;
+    let activeEventSection = null;
+    let activeRange = "1d";
+    let eventChartMode = "default"; // default | selected
+    let selectedEventMarketTicker = null;
+    let lastEventMarkets = [];
+    let lastEventTotals = null;
+    let marketsExpanded = false;
+
+    const tickerToName = new Map();
+    const marketOpenTsCache = new Map();
+    const marketSummaryCache = new Map();
+    const notional24hCache = new Map();
+    const eventNotional24hCache = new Map();
+
+    function setDebug(obj) {
+      if (!DEBUG) return;
+      debugBox.style.display = "block";
+      debugBox.textContent = JSON.stringify(obj, null, 2);
+    }
+
+    function n(x) {
+      if (x === null || x === undefined || x === "") return null;
+      const v = Number(x);
+      return Number.isFinite(v) ? v : null;
+    }
+
+    function dollarsToCents(x) {
+      const v = n(x);
+      return v === null ? null : Math.round(v * 100);
+    }
+
+    function fpToNumber(x) { return n(x); }
+
+    function getYesBid(m) { return n(m?.yes_bid) ?? dollarsToCents(m?.yes_bid_dollars); }
+    function getYesAsk(m) { return n(m?.yes_ask) ?? dollarsToCents(m?.yes_ask_dollars); }
+    function getNoBid(m)  { return n(m?.no_bid)  ?? dollarsToCents(m?.no_bid_dollars); }
+    function getNoAsk(m)  { return n(m?.no_ask)  ?? dollarsToCents(m?.no_ask_dollars); }
+    function getLastPrice(m) { return n(m?.last_price) ?? dollarsToCents(m?.last_price_dollars); }
+    function getVolume(m) { return n(m?.volume) ?? fpToNumber(m?.volume_fp); }
+    function getVolume24h(m) { return n(m?.volume_24h) ?? fpToNumber(m?.volume_24h_fp); }
+    function getOpenInterest(m) { return n(m?.open_interest) ?? fpToNumber(m?.open_interest_fp); }
+
+    function fmtCentsOrNull(x) {
+      const v = n(x);
+      return v === null ? "—" : `${Math.round(v)}¢`;
+    }
+
+    function formatInt(x) {
+      const v = n(x);
+      return v === null ? "—" : Math.round(v).toLocaleString();
+    }
+
+    function formatContracts(x) {
+      return formatInt(x);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+    }
+
+    function formatUSD(x) {
+      const v = n(x);
+      return v === null ? "—" : v.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+    }
+
+    function applyLockedExportChrome() {
+      if (!IS_LOCKED_EXPORT) return;
+      if (searchWrapEl) searchWrapEl.style.display = "none";
+      document.body.style.padding = "0";
+    }
+
+    function showWidget() {
+      widgetCardEl.style.display = "block";
+      searchWrapEl.style.display = IS_LOCKED_EXPORT ? "none" : "block";
+    }
+
+    function hideWidget() {
+      widgetCardEl.style.display = "none";
+      searchWrapEl.style.display = IS_LOCKED_EXPORT ? "none" : "block";
+    }
+
+    function hardDestroyChart() {
+      const canvas = el("priceChart");
+      const existing = (typeof Chart !== "undefined" && Chart.getChart) ? Chart.getChart(canvas) : null;
+      if (existing) {
+        try { existing.destroy(); } catch (_) {}
+      }
+      if (chart) {
+        try { chart.destroy(); } catch (_) {}
+      }
+      chart = null;
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    function clearUI() {
+      errEl.textContent = "";
+      debugBox.style.display = "none";
+      debugBox.textContent = "";
+      metaEl.textContent = "";
+      gridEl.style.display = "none";
+      statsBar.style.display = "none";
+      notionalRow.style.display = "none";
+      chartWrap.style.display = "none";
+      chartMeta.textContent = "";
+      legendRow.style.display = "none";
+      legendRow.innerHTML = "";
+      listWrap.style.display = "none";
+      marketsTbody.innerHTML = "";
+      eventTopTitleEl.style.display = "none";
+      eventTopTitleTextEl.textContent = "";
+      eventTopPctEl.textContent = "";
+      eventTopPctEl.style.display = "none";
+      chancePctEl.textContent = "";
+      chancePctEl.style.display = "none";
+      volLabel.textContent = "VOLUME (TOTAL)";
+      vol24Label.textContent = "VOLUME (24H)";
+      statVol.textContent = "—";
+      statVol24.textContent = "—";
+      statOI.textContent = "—";
+      notionalLabelEl.textContent = "24H Contracts Split:";
+      notionalYesEl.textContent = "YES —";
+      notionalNoEl.textContent = "NO —";
+      activeMode = null;
+      activeMarketTicker = null;
+      activeEventTicker = null;
+      activeEventSection = null;
+      selectedEventMarketTicker = null;
+      eventChartMode = "default";
+      lastEventMarkets = [];
+      lastEventTotals = null;
+      marketsExpanded = false;
+      toggleMarketsBtn.style.display = "none";
+      toggleMarketsBtn.textContent = "Show all";
+      toggleMarketsBtn.classList.remove("isExpanded");
+      tickerToName.clear();
+      hardDestroyChart();
+      updateSelectedModeAvailability();
+      updateChartModeButtons();
+    }
+
+    async function fetchJSON(url) {
+      const res = await fetch(url, { headers: { Accept: "application/json" } });
+      if (!res.ok) {
+        let extra = "";
+        try {
+          const j = await res.json();
+          extra = j?.error?.message ? ` — ${j.error.message}` : j?.error ? ` — ${JSON.stringify(j.error)}` : "";
+          setDebug(j);
+        } catch (_) {}
+        throw new Error(`HTTP ${res.status}${extra}`);
+      }
+      return res.json();
+    }
+
+    function pickFirstString(obj, keys) {
+      for (const k of keys) {
+        const v = obj?.[k];
+        if (typeof v === "string" && v.trim()) return v.trim();
+      }
+      return null;
+    }
+
+    function buildEventSection(ev) {
+      const category =
+        pickFirstString(ev, ["category_title", "category", "category_name"]) ||
+        pickFirstString(ev?.category, ["title", "name"]) ||
+        (Array.isArray(ev?.categories) ? pickFirstString(ev.categories[0], ["title", "name"]) : null);
+
+      const topic =
+        pickFirstString(ev, ["series_title", "series", "topic", "subcategory_title", "subtitle"]) ||
+        pickFirstString(ev?.series, ["title", "name"]) ||
+        (Array.isArray(ev?.tags)
+          ? (typeof ev.tags[0] === "string" ? ev.tags[0] : pickFirstString(ev.tags[0], ["title", "name"]))
+          : null);
+
+      if (category && topic) return `${category} · ${topic}`;
+      if (category) return category;
+      if (topic) return topic;
+      return null;
+    }
+
+    async function fetchEventSection(eventTicker) {
+      try {
+        const payload = await fetchJSON(`${BASE}/events/${encodeURIComponent(eventTicker)}`);
+        setDebug(payload);
+        return buildEventSection(payload.event ?? payload);
+      } catch (_) {
+        return null;
+      }
+    }
+
+    async function fetchEventTitle(eventTicker) {
+      try {
+        const payload = await fetchJSON(`${BASE}/events/${encodeURIComponent(eventTicker)}`);
+        setDebug(payload);
+        const ev = payload.event ?? payload;
+        return ev?.title || ev?.name || ev?.question || null;
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function extractCandidateNameFromTitle(title, fallbackTicker) {
+      const t = (title || "").trim();
+      const patterns = [
+        /Will\s+(.+?)\s+win\b/i,
+        /Will\s+(.+?)\s+be\b/i,
+        /nominate\s+(.+?)\s+as\s+/i
+      ];
+      for (const pattern of patterns) {
+        const m = t.match(pattern);
+        if (m && m[1]) return m[1].trim().replace(/\?$/, "");
+      }
+      const parts = (fallbackTicker || "").split("-");
+      return parts[parts.length - 1] || fallbackTicker || "—";
+    }
+
+    function sumNumbers(arr, getter) {
+      let s = 0;
+      for (const item of arr || []) {
+        const v = n(getter(item));
+        if (v !== null) s += v;
+      }
+      return s;
+    }
+
+    function computeEventTotals(markets) {
+      return {
+        totalOI: sumNumbers(markets, (m) => getOpenInterest(m)),
+        totalVolContracts: sumNumbers(markets, (m) => getVolume(m)),
+        totalVol24hContracts: sumNumbers(markets, (m) => getVolume24h(m))
+      };
+    }
+
+    function applyEventTopTilesDefault() {
+      if (!lastEventTotals) return;
+      volLabel.textContent = "VOLUME (TOTAL)";
+      vol24Label.textContent = "VOLUME (24H)";
+      statVol.textContent = formatContracts(lastEventTotals.totalVolContracts);
+      statVol24.textContent = formatContracts(lastEventTotals.totalVol24hContracts);
+      statOI.textContent = formatInt(lastEventTotals.totalOI);
+    }
+
+    function applyEventTopTilesSelectedFromMarket(mk) {
+      if (!mk) { applyEventTopTilesDefault(); return; }
+      volLabel.textContent = "VOLUME (TOTAL)";
+      vol24Label.textContent = "VOLUME (24H)";
+      statVol.textContent = formatContracts(getVolume(mk));
+      statVol24.textContent = formatContracts(getVolume24h(mk));
+      statOI.textContent = formatInt(getOpenInterest(mk));
+    }
+
+    async function getMarketSummary(ticker) {
+      const t = (ticker || "").toUpperCase();
+      if (!t) return null;
+      if (marketSummaryCache.has(t)) return marketSummaryCache.get(t);
+
+      const fromList = lastEventMarkets.find((m) => (m?.ticker || "").toUpperCase() === t) || null;
+      if (fromList) {
+        const out = {
+          volume: getVolume(fromList),
+          volume_24h: getVolume24h(fromList),
+          open_interest: getOpenInterest(fromList)
+        };
+        if (out.volume !== null && out.volume_24h !== null && out.open_interest !== null) {
+          marketSummaryCache.set(t, out);
+          return out;
+        }
+      }
+
+      try {
+        const payload = await fetchJSON(`${BASE}/markets/${encodeURIComponent(t)}`);
+        const mk = payload.market ?? payload;
+        const out = {
+          volume: getVolume(mk),
+          volume_24h: getVolume24h(mk),
+          open_interest: getOpenInterest(mk)
+        };
+        marketSummaryCache.set(t, out);
+        return out;
+      } catch (_) {
+        return null;
+      }
+    }
+
+    async function updateEventTopTiles() {
+      if (activeMode !== "event") return;
+      if (eventChartMode === "selected" && selectedEventMarketTicker) {
+        const fromList = lastEventMarkets.find((m) => (m?.ticker || "").toUpperCase() === selectedEventMarketTicker) || null;
+        if (fromList) {
+          applyEventTopTilesSelectedFromMarket(fromList);
+        } else {
+          const summary = await getMarketSummary(selectedEventMarketTicker);
+          if (summary) {
+            applyEventTopTilesSelectedFromMarket(summary);
+          } else {
+            applyEventTopTilesDefault();
+          }
+        }
+      } else {
+        applyEventTopTilesDefault();
+      }
+    }
+
+    function sortMarkets(markets, mode) {
+      const m = [...markets];
+      const yesBid = (o) => getYesBid(o) ?? -Infinity;
+      const vol = (o) => getVolume(o) ?? -Infinity;
+      const title = (o) => (o?.title || "").toLowerCase();
+      switch (mode) {
+        case "yes_asc": m.sort((a, b) => yesBid(a) - yesBid(b)); break;
+        case "vol_desc": m.sort((a, b) => vol(b) - vol(a)); break;
+        case "title_asc": m.sort((a, b) => title(a).localeCompare(title(b))); break;
+        case "yes_desc":
+        default: m.sort((a, b) => yesBid(b) - yesBid(a)); break;
+      }
+      return m;
+    }
+
+    function highlightSelectedRow() {
+      marketsTbody.querySelectorAll("tr").forEach((r) => r.classList.remove("selectedRow"));
+      if (!selectedEventMarketTicker) return;
+      const row = marketsTbody.querySelector(`tr[data-ticker="${CSS.escape(selectedEventMarketTicker)}"]`);
+      if (row) row.classList.add("selectedRow");
+    }
+
+    function renderMarketsList(markets) {
+      if (IS_LOCKED_EXPORT) {
+        listWrap.style.display = "none";
+      } else {
+        listWrap.style.display = "block";
+      }
+      listTitle.textContent = activeEventSection || "Markets";
+      const sorted = sortMarkets(markets, sortSelect.value);
+      const display = marketsExpanded ? sorted : sorted.slice(0, MAX_MARKETS_COLLAPSED);
+      marketsTbody.innerHTML = "";
+
+      toggleMarketsBtn.style.display = sorted.length > MAX_MARKETS_COLLAPSED ? "inline-block" : "none";
+      toggleMarketsBtn.textContent = marketsExpanded ? `Show top ${MAX_MARKETS_COLLAPSED}` : "Show all";
+      toggleMarketsBtn.classList.toggle("isExpanded", marketsExpanded);
+      countTag.textContent = marketsExpanded ? `${sorted.length} markets` : `Top ${Math.min(MAX_MARKETS_COLLAPSED, sorted.length)} of ${sorted.length}`;
+
+      for (const mk of display) {
+        const tkr = (mk?.ticker || mk?.market_ticker || "").toUpperCase();
+        const tr = document.createElement("tr");
+        tr.className = "clickable";
+        tr.dataset.ticker = tkr;
+        tr.innerHTML = `
+          <td>${mk?.title || "—"}</td>
+          <td>${fmtCentsOrNull(getYesBid(mk))} / ${fmtCentsOrNull(getYesAsk(mk))}</td>
+          <td>${fmtCentsOrNull(getNoBid(mk))} / ${fmtCentsOrNull(getNoAsk(mk))}</td>
+          <td>${(getVolume(mk) ?? "—").toString()}</td>
+          <td class="tickerCell">${mk?.ticker || mk?.market_ticker || "—"}</td>
+        `;
+        tr.addEventListener("click", async () => {
+          if (activeMode !== "event") return;
+          selectedEventMarketTicker = tkr;
+          eventChartMode = "selected";
+          updateChartModeButtons();
+          updateSelectedModeAvailability();
+          highlightSelectedRow();
+          await updateEventTopTiles();
+          await updateEventNotionalPill();
+          try {
+            await loadEventChart();
+          } catch (e) {
+            errEl.textContent = `Chart error:\n${e.message}`;
+          }
+        });
+        marketsTbody.appendChild(tr);
+      }
+
+      highlightSelectedRow();
+    }
+
+    function renderLegendFromDatasets(datasets) {
+      legendRow.innerHTML = "";
+      if (activeMode === "market") {
+        legendRow.style.display = "none";
+        const ds0 = datasets[0];
+        const last0 = ds0?.data?.length ? ds0.data[ds0.data.length - 1].y : null;
+        if (last0 !== null) {
+          chancePctEl.textContent = `${Math.round(last0)}%`;
+          chancePctEl.style.display = "inline";
+        } else {
+          chancePctEl.textContent = "";
+          chancePctEl.style.display = "none";
+        }
+        eventTopPctEl.textContent = "";
+        eventTopPctEl.style.display = "none";
+        return;
+      }
+
+      chancePctEl.textContent = "";
+      chancePctEl.style.display = "none";
+
+      if (!Array.isArray(datasets) || !datasets.length) {
+        legendRow.style.display = "none";
+        return;
+      }
+
+      legendRow.style.display = "flex";
+      for (const ds of datasets) {
+        const last = ds?.data?.length ? ds.data[ds.data.length - 1].y : null;
+        const item = document.createElement("div");
+        item.className = "legendItem";
+        item.innerHTML = `<span class="dot" style="background:${ds.borderColor || '#999'}"></span><span>${ds.label || '—'}</span><span class="legendPct">${last === null ? '—' : Math.round(last) + '%'}</span>`;
+        legendRow.appendChild(item);
+      }
+    }
+
+    function prettyMarketsLine(tickers) {
+      return (tickers || []).map((t) => tickerToName.get((t || "").toUpperCase()) || t).filter(Boolean).join(" , ");
+    }
+
+    function isoToUnixSeconds(iso) {
+      if (!iso || typeof iso !== "string") return null;
+      const ms = Date.parse(iso);
+      return Number.isFinite(ms) ? Math.floor(ms / 1000) : null;
+    }
+
+    async function getMarketOpenTs(ticker) {
+      const t = (ticker || "").toUpperCase();
+      if (!t) return null;
+      if (marketOpenTsCache.has(t)) return marketOpenTsCache.get(t);
+      try {
+        const payload = await fetchJSON(`${BASE}/markets/${encodeURIComponent(t)}`);
+        const m = payload.market ?? payload;
+        const ts =
+          isoToUnixSeconds(m?.open_time) ??
+          isoToUnixSeconds(m?.created_time) ??
+          isoToUnixSeconds(m?.updated_time) ??
+          null;
+        marketOpenTsCache.set(t, ts);
+        return ts;
+      } catch (_) {
+        marketOpenTsCache.set(t, null);
+        return null;
+      }
+    }
+
+    async function getEarliestOpenTs(tickers) {
+      const vals = await Promise.all((tickers || []).map(getMarketOpenTs));
+      const nums = vals.filter((v) => typeof v === "number" && v > 0);
+      return nums.length ? Math.min(...nums) : null;
+    }
+
+    async function rangeToWindow(range, tickersForChart) {
+      const nowSec = Math.floor(Date.now() / 1000);
+      if (range === "live") return { start: nowSec - 3600, end: nowSec, interval: 1 };
+      if (range === "1d") return { start: nowSec - 86400, end: nowSec, interval: 60 };
+      if (range === "1w") return { start: nowSec - 7 * 86400, end: nowSec, interval: 60 };
+      if (range === "1m") return { start: nowSec - 30 * 86400, end: nowSec, interval: 1440 };
+      if (range === "1y") return { start: nowSec - 365 * 86400, end: nowSec, interval: 1440 };
+      const inception = await getEarliestOpenTs(tickersForChart);
+      return { start: inception ?? (nowSec - 5 * 365 * 86400), end: nowSec, interval: 1440 };
+    }
+
+    function toChartPoints(candles) {
+      const pts = [];
+      for (const c of candles || []) {
+        const ts = n(c?.end_period_ts);
+        const close = n(c?.price?.close) ?? (() => {
+          const d = n(c?.price?.close_dollars);
+          return d === null ? null : d * 100;
+        })();
+        if (ts !== null && close !== null) {
+          pts.push({ x: ts * 1000, y: close });
+        }
+      }
+      return pts;
+    }
+
+    function updateRangeButtonsActive() {
+      document.querySelectorAll("[data-range]").forEach((btn) => {
+        btn.classList.toggle("active", btn.getAttribute("data-range") === activeRange);
+      });
+    }
+
+    function updateChartModeButtons() {
+      document.querySelectorAll("[data-chartmode]").forEach((btn) => btn.classList.remove("isActive"));
+      const activeBtn = document.querySelector(`[data-chartmode="${eventChartMode}"]`);
+      if (activeBtn) activeBtn.classList.add("isActive");
+    }
+
+    function updateSelectedModeAvailability() {
+      const selBtn = el("btnSelectedMode");
+      if (!selBtn) return;
+      selBtn.classList.toggle("isDisabled", !selectedEventMarketTicker);
+    }
+
+    function pickEventTickersForChart() {
+      if (!lastEventMarkets.length) return [];
+      if (eventChartMode === "selected" && selectedEventMarketTicker) return [selectedEventMarketTicker];
+      return [...lastEventMarkets]
+        .sort((a, b) => (getYesBid(b) ?? -Infinity) - (getYesBid(a) ?? -Infinity))
+        .slice(0, 3)
+        .map((m) => (m?.ticker || m?.market_ticker || "").toUpperCase())
+        .filter(Boolean);
+    }
+
+    const endPointLabelsPlugin = {
+      id: "endPointLabelsPlugin",
+      afterDatasetsDraw(chartInstance) {
+        const { ctx, chartArea } = chartInstance;
+        if (!chartArea) return;
+        ctx.save();
+        ctx.font = "800 15px system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
+        ctx.textBaseline = "middle";
+        chartInstance.data.datasets.forEach((dataset, datasetIndex) => {
+          const meta = chartInstance.getDatasetMeta(datasetIndex);
+          if (!meta || meta.hidden || !meta.data || !meta.data.length) return;
+          let lastIndex = meta.data.length - 1;
+          while (lastIndex >= 0 && !meta.data[lastIndex]) lastIndex--;
+          if (lastIndex < 0) return;
+          const point = meta.data[lastIndex];
+          const value = dataset.data?.[lastIndex]?.y;
+          if (!Number.isFinite(value)) return;
+          const color = dataset.borderColor || "#fff";
+          const x = Math.min(point.x + 14, chartArea.right + 8);
+          const y = Math.max(chartArea.top + 12, Math.min(point.y, chartArea.bottom - 12));
+          ctx.fillStyle = color;
+          ctx.strokeStyle = "rgba(17,19,23,.92)";
+          ctx.lineWidth = 5;
+          ctx.strokeText(`${Math.round(value)}%`, x, y);
+          ctx.fillText(`${Math.round(value)}%`, x, y);
+        });
+        ctx.restore();
+      }
+    };
+
+    async function loadChartForMarketTickers(tickers) {
+      if (!Array.isArray(tickers) || !tickers.length) return;
+      hardDestroyChart();
+      const { start, end, interval } = await rangeToWindow(activeRange, tickers);
+      const url = `${BASE}/markets/candlesticks?market_tickers=${encodeURIComponent(tickers.join(","))}&start_ts=${start}&end_ts=${end}&period_interval=${interval}&include_latest_before_start=true`;
+      const payload = await fetchJSON(url);
+      setDebug(payload);
+
+      const markets = payload?.markets || [];
+      if (!Array.isArray(markets) || !markets.length) {
+        throw new Error("No candlestick data returned for chart range.");
+      }
+
+      const byTicker = new Map();
+      for (const m of markets) byTicker.set((m?.market_ticker || "").toUpperCase(), m);
+      const orderedMarkets = tickers.map((t) => byTicker.get((t || "").toUpperCase())).filter(Boolean);
+      const palette = ["#20c997", "#3b82f6", "#f97316", "#a855f7", "#ef4444", "#eab308"];
+
+      const datasets = orderedMarkets.map((m, idx) => {
+        const marketTicker = (m?.market_ticker || "").toUpperCase();
+        const label = tickerToName.get(marketTicker) || marketTicker;
+        const data = toChartPoints(m?.candlesticks || []);
+        const color = palette[idx % palette.length];
+        return {
+          label,
+          data,
+          borderColor: color,
+          backgroundColor: color,
+          borderWidth: 3,
+          tension: 0.32,
+          pointRadius: (context) => context.dataIndex === context.dataset.data.length - 1 ? 5 : 0,
+          pointHoverRadius: 5,
+          pointBorderWidth: 3,
+          pointBorderColor: "rgba(255,255,255,.18)",
+          pointBackgroundColor: color,
+          fill: false
+        };
+      }).filter((ds) => Array.isArray(ds.data) && ds.data.length > 0);
+
+      if (!datasets.length) {
+        throw new Error("Candlestick response returned no usable numeric points.");
+      }
+
+      chartWrap.style.display = "block";
+      chartMeta.textContent = "";
+      renderLegendFromDatasets(datasets);
+
+      const canvas = el("priceChart");
+      const ctx = canvas.getContext("2d");
+      const xUnit = activeRange === "live" ? "minute" : activeRange === "1d" ? "hour" : activeRange === "1w" || activeRange === "1m" ? "day" : "month";
+      const startMs = start * 1000;
+      const endMs = end * 1000;
+      const crossesYears = new Date(startMs).getFullYear() !== new Date(endMs).getFullYear();
+      const showYear = (activeRange === "1y" || activeRange === "all") && crossesYears;
+      const tickFmt = activeRange === "live" ? "HH:mm" : activeRange === "1d" ? "HH:mm" : activeRange === "1w" ? "d MMM" : activeRange === "1m" ? "d MMM" : showYear ? "dd MMM yy" : activeRange === "1y" ? "dd MMM" : "MMM";
+      const tooltipFmt = activeRange === "live" || activeRange === "1d" ? "d MMM, HH:mm" : showYear ? "dd MMM yy" : "d MMM";
+
+      chart = new Chart(ctx, {
+        type: "line",
+        data: { datasets },
+        plugins: [endPointLabelsPlugin],
+        options: {
+          layout: { padding: { right: 62, left: 4, top: 8, bottom: 4 } },
+          responsive: true,
+          maintainAspectRatio: false,
+          parsing: false,
+          animation: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              mode: "index",
+              intersect: false,
+              callbacks: {
+                title: (items) => {
+                  const x = items?.[0]?.parsed?.x;
+                  if (!x) return "";
+                  return typeof dateFns !== "undefined" ? dateFns.format(new Date(x), tooltipFmt) : new Date(x).toLocaleString();
+                },
+                label: (ctx) => `${ctx.dataset?.label || ""}: ${typeof ctx.parsed?.y === "number" ? ctx.parsed.y.toFixed(1) + "%" : "—"}`
+              }
+            }
+          },
+          interaction: { mode: "index", intersect: false },
+          scales: {
+            x: {
+              type: "time",
+              time: {
+                unit: xUnit,
+                displayFormats: { minute: "HH:mm", hour: "HH:mm", day: "d MMM", month: showYear ? "dd MMM yy" : (activeRange === "1y" ? "dd MMM" : "MMM") },
+                tooltipFormat: tooltipFmt
+              },
+              grid: { color: document.body.classList.contains("lightTheme") ? "rgba(0,0,0,.08)" : "rgba(255,255,255,.10)", borderDash: [4, 4] },
+              ticks: {
+                color: document.body.classList.contains("lightTheme") ? "rgba(0,0,0,.7)" : "rgba(255,255,255,.7)",
+                maxRotation: 0,
+                autoSkip: true,
+                maxTicksLimit: activeRange === "live" ? 7 : activeRange === "1d" ? 8 : activeRange === "1w" ? 7 : 6,
+                callback: (_value, index, ticks) => {
+                  const raw = (ticks?.[index] && typeof ticks[index].value === "number") ? ticks[index].value : (typeof _value === "number" ? _value : Number(_value));
+                  if (!Number.isFinite(raw)) return "";
+                  const d = new Date(raw);
+                  if (activeRange === "live") {
+                    return new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit", hour12: true }).format(d).replace(" ", "");
+                  }
+                  if (activeRange === "1d") {
+                    return new Intl.DateTimeFormat(undefined, { hour: "numeric", hour12: true }).format(d).replace(" ", "");
+                  }
+                  try {
+                    if ((activeRange === "1y" || activeRange === "all") && crossesYears) {
+                      return typeof dateFns !== "undefined" ? dateFns.format(d, "dd MMM yy") : d.toLocaleDateString();
+                    }
+                    return typeof dateFns !== "undefined" ? dateFns.format(d, tickFmt) : d.toLocaleDateString();
+                  } catch (_) {
+                    return d.toLocaleDateString();
+                  }
+                }
+              },
+              border: { color: document.body.classList.contains("lightTheme") ? "rgba(0,0,0,.12)" : "rgba(255,255,255,.12)" }
+            },
+            y: {
+              min: 0,
+              max: 100,
+              grid: { color: document.body.classList.contains("lightTheme") ? "rgba(0,0,0,.08)" : "rgba(255,255,255,.10)", borderDash: [4, 4] },
+              ticks: { stepSize: 25, color: document.body.classList.contains("lightTheme") ? "rgba(0,0,0,.7)" : "rgba(255,255,255,.78)", callback: (v) => `${v}%` },
+              border: { color: document.body.classList.contains("lightTheme") ? "rgba(0,0,0,.12)" : "rgba(255,255,255,.12)" }
+            }
+          }
+        }
+      });
+    }
+
+    async function loadEventChart() {
+      const tickers = pickEventTickersForChart();
+      if (!tickers.length) return;
+      await loadChartForMarketTickers(tickers);
+    }
+
+    async function fetchContracts24hForTicker(ticker) {
+      const t = (ticker || "").toUpperCase();
+      if (!t) return { yesContracts: NaN, noContracts: NaN };
+      const cached = notional24hCache.get(t);
+      if (cached && Date.now() - cached.tsMs < 60000) return { yesContracts: cached.yesContracts, noContracts: cached.noContracts };
+
+      const endTs = Math.floor(Date.now() / 1000);
+      const startTs = endTs - 86400;
+      let cursor = null;
+      let yesContracts = 0;
+      let noContracts = 0;
+
+      for (let page = 0; page < 15; page++) {
+        const qs = new URLSearchParams({ ticker: t, min_ts: String(startTs), max_ts: String(endTs), limit: "1000" });
+        if (cursor) qs.set("cursor", cursor);
+        const payload = await fetchJSON(`${BASE}/markets/trades?${qs.toString()}`);
+        const trades = Array.isArray(payload?.trades) ? payload.trades : [];
+        for (const tr of trades) {
+          const count = n(tr?.count) ?? n(tr?.count_fp) ?? 0;
+          if (count <= 0) continue;
+          const side = String(tr?.taker_side || tr?.side || "").toLowerCase();
+          if (side === "yes") yesContracts += count;
+          else if (side === "no") noContracts += count;
+        }
+        cursor = payload?.cursor || null;
+        if (!cursor || !trades.length) break;
+      }
+
+      notional24hCache.set(t, { tsMs: Date.now(), yesContracts, noContracts });
+      return { yesContracts, noContracts };
+    }
+
+    async function fetchContracts24hForEvent(eventTicker) {
+      const ev = (eventTicker || "").toUpperCase();
+      if (!ev) return { yesContracts: NaN, noContracts: NaN };
+      const cached = eventNotional24hCache.get(ev);
+      if (cached && Date.now() - cached.tsMs < 60000) return { yesContracts: cached.yesContracts, noContracts: cached.noContracts };
+      const tickers = lastEventMarkets.map((m) => (m?.ticker || m?.market_ticker || "").toUpperCase()).filter(Boolean);
+      const settled = await Promise.allSettled(tickers.map((t) => fetchContracts24hForTicker(t)));
+      let yesContracts = 0;
+      let noContracts = 0;
+      for (const item of settled) {
+        if (item.status !== "fulfilled") continue;
+        const r = item.value;
+        if (Number.isFinite(r.yesContracts)) yesContracts += r.yesContracts;
+        if (Number.isFinite(r.noContracts)) noContracts += r.noContracts;
+      }
+      eventNotional24hCache.set(ev, { tsMs: Date.now(), yesContracts, noContracts });
+      return { yesContracts, noContracts };
+    }
+
+    async function updateNotionalPillForTicker(ticker, labelMode) {
+      if (!ticker) { notionalRow.style.display = "none"; return; }
+      notionalRow.style.display = "flex";
+      notionalLabelEl.textContent = labelMode === "market" ? "24H Contracts Split:" : "24H Contracts Split (Selected market):";
+      notionalYesEl.textContent = "YES …";
+      notionalNoEl.textContent = "NO …";
+      try {
+        const { yesContracts, noContracts } = await fetchContracts24hForTicker(ticker);
+        notionalYesEl.textContent = `YES ${formatContracts(yesContracts)}`;
+        notionalNoEl.textContent = `NO ${formatContracts(noContracts)}`;
+      } catch (_) {
+        notionalYesEl.textContent = "YES —";
+        notionalNoEl.textContent = "NO —";
+      }
+    }
+
+    async function updateEventNotionalPill() {
+      if (activeMode !== "event") return;
+      notionalRow.style.display = "flex";
+      notionalYesEl.textContent = "YES …";
+      notionalNoEl.textContent = "NO …";
+      try {
+        if (eventChartMode === "selected" && selectedEventMarketTicker) {
+          notionalLabelEl.textContent = "24H Contracts Split (Selected market):";
+          const { yesContracts, noContracts } = await fetchContracts24hForTicker(selectedEventMarketTicker);
+          notionalYesEl.textContent = `YES ${formatContracts(yesContracts)}`;
+          notionalNoEl.textContent = `NO ${formatContracts(noContracts)}`;
+        } else {
+          notionalLabelEl.textContent = "24H Contracts Split (All markets):";
+          const { yesContracts, noContracts } = await fetchContracts24hForEvent(activeEventTicker);
+          notionalYesEl.textContent = `YES ${formatContracts(yesContracts)}`;
+          notionalNoEl.textContent = `NO ${formatContracts(noContracts)}`;
+        }
+      } catch (_) {
+        notionalYesEl.textContent = "YES —";
+        notionalNoEl.textContent = "NO —";
+      }
+    }
+
+    async function refreshActiveMarketSnapshot() {
+      if (!activeMarketTicker) return;
+      const payload = await fetchJSON(`${BASE}/markets/${encodeURIComponent(activeMarketTicker)}`);
+      const data = payload.market ?? payload;
+      yesBidAskEl.textContent = `${fmtCentsOrNull(getYesBid(data))} / ${fmtCentsOrNull(getYesAsk(data))}`;
+      noBidAskEl.textContent = `${fmtCentsOrNull(getNoBid(data))} / ${fmtCentsOrNull(getNoAsk(data))}`;
+      lastPriceEl.textContent = fmtCentsOrNull(getLastPrice(data));
+      volumeEl.textContent = (getVolume(data) ?? "—").toString();
+      metaEl.textContent = `Ticker: ${data?.ticker || activeMarketTicker} • Status: ${data?.status || '—'} • Closes: ${data?.close_time || '—'}`;
+      statsBar.style.display = "flex";
+      volLabel.textContent = "VOLUME (TOTAL)";
+      vol24Label.textContent = "VOLUME (24H)";
+      statVol.textContent = formatContracts(getVolume(data));
+      statVol24.textContent = formatContracts(getVolume24h(data));
+      statOI.textContent = formatInt(getOpenInterest(data));
+      await updateNotionalPillForTicker(activeMarketTicker, "market");
+    }
+
+    async function refreshActiveEventList() {
+      if (!activeEventTicker) return;
+      activeEventSection = await fetchEventSection(activeEventTicker);
+      const payload = await fetchJSON(`${BASE}/markets?event_ticker=${encodeURIComponent(activeEventTicker)}&limit=200`);
+      const markets = payload?.markets ?? [];
+      if (!Array.isArray(markets) || !markets.length) return;
+      lastEventMarkets = markets;
+      lastEventTotals = computeEventTotals(markets);
+      statsBar.style.display = "flex";
+      applyEventTopTilesDefault();
+      metaEl.textContent = `Event: ${activeEventTicker || "—"} • Showing ${markets.length} markets`;
+      tickerToName.clear();
+      markets.forEach((m) => {
+        const tkr = (m?.ticker || m?.market_ticker || "").toUpperCase();
+        tickerToName.set(tkr, extractCandidateNameFromTitle(m?.title, tkr));
+      });
+      if (selectedEventMarketTicker) {
+        const stillExists = markets.some((m) => (m?.ticker || m?.market_ticker || "").toUpperCase() === selectedEventMarketTicker);
+        if (!stillExists) selectedEventMarketTicker = null;
+      }
+      updateSelectedModeAvailability();
+      renderMarketsList(markets);
+      await updateEventTopTiles();
+      await updateEventNotionalPill();
+    }
+
+    async function loadMarket(tickerRaw) {
+      const ticker = (tickerRaw || "").trim().toUpperCase();
+      clearUI();
+      titleEl.textContent = `Loading ${ticker}…`;
+      try {
+        const payload = await fetchJSON(`${BASE}/markets/${encodeURIComponent(ticker)}`);
+        setDebug(payload);
+        const data = payload.market ?? payload;
+        if (!data || typeof data !== "object") throw new Error("Unexpected response shape from proxy.");
+        activeMode = "market";
+        activeMarketTicker = (data?.ticker || ticker).toUpperCase();
+        eventTopTitleTextEl.textContent = data?.title || data?.ticker || ticker;
+        eventTopTitleEl.style.display = "flex";
+        metaEl.textContent = `Ticker: ${data?.ticker || ticker} • Status: ${data?.status || '—'} • Closes: ${data?.close_time || '—'}`;
+        yesBidAskEl.textContent = `${fmtCentsOrNull(getYesBid(data))} / ${fmtCentsOrNull(getYesAsk(data))}`;
+        noBidAskEl.textContent = `${fmtCentsOrNull(getNoBid(data))} / ${fmtCentsOrNull(getNoAsk(data))}`;
+        lastPriceEl.textContent = fmtCentsOrNull(getLastPrice(data));
+        volumeEl.textContent = (getVolume(data) ?? "—").toString();
+        gridEl.style.display = "grid";
+        statsBar.style.display = "flex";
+        volLabel.textContent = "VOLUME (TOTAL)";
+        vol24Label.textContent = "VOLUME (24H)";
+        statVol.textContent = formatContracts(getVolume(data));
+        statVol24.textContent = formatContracts(getVolume24h(data));
+        statOI.textContent = formatInt(getOpenInterest(data));
+        tickerToName.set(activeMarketTicker, data?.title || activeMarketTicker);
+        await updateNotionalPillForTicker(activeMarketTicker, "market");
+        await loadChartForMarketTickers([activeMarketTicker]);
+        showWidget();
+        titleEl.textContent = "Enter a market ticker or event ticker";
+      } catch (e) {
+        hideWidget();
+        errEl.textContent = `Couldn’t load that market.\n${e.message}`;
+        titleEl.textContent = "Enter a market ticker or event ticker";
+      }
+    }
+
+    async function loadEvent(eventTickerRaw) {
+      const eventTicker = (eventTickerRaw || "").trim().toUpperCase();
+      clearUI();
+      titleEl.textContent = `Loading ${eventTicker}…`;
+      try {
+        activeMode = "event";
+        activeEventTicker = eventTicker;
+        activeEventSection = await fetchEventSection(eventTicker);
+        const eventTitle = await fetchEventTitle(eventTicker);
+        eventTopTitleTextEl.textContent = eventTitle || eventTicker;
+        eventTopTitleEl.style.display = "flex";
+        const payload = await fetchJSON(`${BASE}/markets?event_ticker=${encodeURIComponent(eventTicker)}&limit=200`);
+        setDebug(payload);
+        const markets = payload?.markets ?? [];
+        if (!Array.isArray(markets) || !markets.length) throw new Error("No markets found for that event ticker.");
+
+        lastEventMarkets = markets;
+        lastEventTotals = computeEventTotals(markets);
+        statsBar.style.display = "flex";
+        applyEventTopTilesDefault();
+          metaEl.textContent = `Event: ${eventTicker} • Showing ${markets.length} markets`;
+        tickerToName.clear();
+        markets.forEach((m) => {
+          const tkr = (m?.ticker || m?.market_ticker || "").toUpperCase();
+          tickerToName.set(tkr, extractCandidateNameFromTitle(m?.title, tkr));
+        });
+        const bootSelectedTicker = IS_LOCKED_EXPORT ? String(EMBED_CONFIG?.selectedEventMarketTicker || "").trim().toUpperCase() : "";
+        selectedEventMarketTicker = bootSelectedTicker || null;
+        eventChartMode = (IS_LOCKED_EXPORT && EMBED_CONFIG?.eventChartMode === "selected" && selectedEventMarketTicker) ? "selected" : "default";
+        marketsExpanded = false;
+        updateChartModeButtons();
+        updateSelectedModeAvailability();
+        renderMarketsList(markets);
+        await updateEventNotionalPill();
+        await loadEventChart();
+        showWidget();
+        titleEl.textContent = "Enter a market ticker or event ticker";
+      } catch (e) {
+        hideWidget();
+        errEl.textContent = `Couldn’t load that event.\n${e.message}`;
+        titleEl.textContent = "Enter a market ticker or event ticker";
+      }
+    }
+
+    async function loadFromInput(raw) {
+      const value = (raw || "").trim().toUpperCase();
+      if (!value) return;
+      inputBox.value = value;
+
+      try {
+        const eventPayload = await fetchJSON(`${BASE}/markets?event_ticker=${encodeURIComponent(value)}&limit=2`);
+        if (Array.isArray(eventPayload?.markets) && eventPayload.markets.length) {
+          const newUrl = new URL(location.href);
+          newUrl.searchParams.delete("ticker");
+          newUrl.searchParams.set("event", value);
+          history.replaceState({}, "", newUrl);
+          await loadEvent(value);
+          return;
+        }
+      } catch (_) {}
+
+      const newUrl = new URL(location.href);
+      newUrl.searchParams.delete("event");
+      newUrl.searchParams.set("ticker", value);
+      history.replaceState({}, "", newUrl);
+      await loadMarket(value);
+    }
+
+    function applyBrand(key, persist = true) {
+      const resolvedKey = BRAND_PRESETS[key] ? key : "vegasinsider";
+      const p = BRAND_PRESETS[resolvedKey];
+      currentBrandKey = resolvedKey;
+      widgetCardEl.style.setProperty("--brand-accent", p.accent);
+      widgetCardEl.style.setProperty("--brand-accent-2", p.accent2);
+      widgetCardEl.style.setProperty("--brand-accent-rgb", p.rgb);
+      document.documentElement.style.setProperty("--brand-accent", p.accent);
+      document.documentElement.style.setProperty("--brand-accent-2", p.accent2);
+      document.documentElement.style.setProperty("--brand-accent-rgb", p.rgb);
+      brandLogo.src = p.logo;
+      brandLogo.alt = p.name;
+      if (persist && !IS_LOCKED_EXPORT) {
+        try { localStorage.setItem("kalshi_widget_brand", resolvedKey); } catch (_) {}
+      }
+    }
+
+    function setTheme(mode, persist = true) {
+      const isLight = mode === "light";
+      document.body.classList.toggle("lightTheme", isLight);
+      if (persist && !IS_LOCKED_EXPORT) {
+        try { localStorage.setItem("kalshi_widget_theme", isLight ? "light" : "dark"); } catch (_) {}
+      }
+      if (chart) {
+        const tickColor = isLight ? "rgba(0,0,0,.7)" : "rgba(255,255,255,.7)";
+        const borderColor = isLight ? "rgba(0,0,0,.12)" : "rgba(255,255,255,.12)";
+        const gridColor = isLight ? "rgba(0,0,0,.06)" : "rgba(255,255,255,.06)";
+        chart.options.scales.x.ticks.color = tickColor;
+        chart.options.scales.y.ticks.color = tickColor;
+        chart.options.scales.x.border.color = borderColor;
+        chart.options.scales.y.border.color = borderColor;
+        chart.options.scales.x.grid.color = gridColor;
+        chart.options.scales.y.grid.color = gridColor;
+        chart.update();
+      }
+    }
+
+    function closeMenu(menuEl, btnEl) {
+      menuEl.classList.add("hidden");
+      if (btnEl) btnEl.setAttribute("aria-expanded", "false");
+    }
+
+    function toggleMenu(menuEl, btnEl) {
+      const isHidden = menuEl.classList.contains("hidden");
+      if (isHidden) {
+        menuEl.classList.remove("hidden");
+        if (btnEl) btnEl.setAttribute("aria-expanded", "true");
+      } else {
+        closeMenu(menuEl, btnEl);
+      }
+    }
+
+    function getCurrentTheme() {
+      return document.body.classList.contains("lightTheme") ? "light" : "dark";
+    }
+
+    function getLockedExportState() {
+      const marketTicker = activeMode === "market" ? activeMarketTicker : null;
+      const eventTicker = activeMode === "event" ? activeEventTicker : null;
+      if (!marketTicker && !eventTicker) {
+        throw new Error("Load a market or event before exporting locked HTML.");
+      }
+      return {
+        exportMode: true,
+        brand: currentBrandKey,
+        theme: getCurrentTheme(),
+        range: activeRange,
+        eventChartMode,
+        selectedEventMarketTicker,
+        marketTicker,
+        eventTicker
+      };
+    }
+
+    function buildLockedExportHtml() {
+      const state = getLockedExportState();
+      const clonedDoc = document.documentElement.cloneNode(true);
+      const hiddenStyle = document.createElement("style");
+      hiddenStyle.textContent = "#searchWrap{display:none !important;} body{padding:12px !important;}";
+      clonedDoc.querySelector("head").appendChild(hiddenStyle);
+
+      const clonedBrandMenu = clonedDoc.querySelector("#brandMenu");
+      const clonedHtmlMenu = clonedDoc.querySelector("#htmlMenu");
+      if (clonedBrandMenu) clonedBrandMenu.classList.add("hidden");
+      if (clonedHtmlMenu) clonedHtmlMenu.classList.add("hidden");
+
+      const configScript = document.createElement("script");
+      configScript.textContent = `window.__KALSHI_EMBED__ = ${JSON.stringify(state)};`;
+      clonedDoc.querySelector("head").appendChild(configScript);
+
+      return "<!doctype html>\n" + clonedDoc.outerHTML;
+    }
+
+    function downloadCurrentHtml() {
+      const html = buildLockedExportHtml();
+      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const slug = (activeEventTicker || activeMarketTicker || "kalshi_widget").toLowerCase();
+      const brandSlug = (currentBrandKey || "vegasinsider").toLowerCase();
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `kalshi_${brandSlug}_${slug}_locked.html`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        a.remove();
+      }, 0);
+    }
+
+    async function copyCurrentHtml() {
+      const html = buildLockedExportHtml();
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(html);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = html;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+    }
+
+    // UI wiring
+    inputBox.addEventListener("input", () => {
+      const start = inputBox.selectionStart;
+      const end = inputBox.selectionEnd;
+      const upper = inputBox.value.toUpperCase();
+      if (inputBox.value !== upper) {
+        inputBox.value = upper;
+        try { inputBox.setSelectionRange(start, end); } catch (_) {}
+      }
+    });
+
+    el("loadBtn").addEventListener("click", () => loadFromInput(inputBox.value));
+    inputBox.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        loadFromInput(inputBox.value);
+      }
+    });
+
+    sortSelect.addEventListener("change", () => {
+      if (lastEventMarkets.length) renderMarketsList(lastEventMarkets);
+    });
+
+    toggleMarketsBtn.addEventListener("click", () => {
+      if (!lastEventMarkets.length) return;
+      marketsExpanded = !marketsExpanded;
+      renderMarketsList(lastEventMarkets);
+    });
+
+    document.querySelectorAll("[data-range]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        activeRange = btn.getAttribute("data-range");
+        updateRangeButtonsActive();
+        try {
+          if (activeMode === "event") await loadEventChart();
+          if (activeMode === "market" && activeMarketTicker) await loadChartForMarketTickers([activeMarketTicker]);
+        } catch (e) {
+          errEl.textContent = `Chart error:\n${e.message}`;
+        }
+      });
+    });
+
+    document.querySelectorAll("[data-chartmode]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        if (activeMode !== "event") return;
+        const mode = btn.getAttribute("data-chartmode");
+        if (mode === "selected") {
+          eventChartMode = selectedEventMarketTicker ? "selected" : "default";
+        } else {
+          eventChartMode = "default";
+        }
+        updateChartModeButtons();
+        updateSelectedModeAvailability();
+        await updateEventTopTiles();
+        await updateEventNotionalPill();
+        try {
+          await loadEventChart();
+        } catch (e) {
+          errEl.textContent = `Chart error:\n${e.message}`;
+        }
+      });
+    });
+
+    const brandBtn = el("brandBtn");
+    const brandMenu = el("brandMenu");
+    brandBtn.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); toggleMenu(brandMenu, brandBtn); });
+    brandMenu.addEventListener("click", (e) => {
+      const opt = e.target.closest(".brandOpt");
+      if (!opt) return;
+      applyBrand(opt.getAttribute("data-brand"));
+      closeMenu(brandMenu, brandBtn);
+    });
+
+    const themeBtn = el("themeBtn");
+    themeBtn.addEventListener("click", () => {
+      setTheme(document.body.classList.contains("lightTheme") ? "dark" : "light");
+    });
+
+    const htmlBtn = el("downloadHtmlBtn");
+    const htmlMenu = el("htmlMenu");
+    htmlBtn.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); toggleMenu(htmlMenu, htmlBtn); });
+    el("htmlDownloadOpt").addEventListener("click", (e) => {
+      e.preventDefault(); e.stopPropagation(); closeMenu(htmlMenu, htmlBtn); downloadCurrentHtml();
+    });
+    el("htmlCopyOpt").addEventListener("click", async (e) => {
+      e.preventDefault(); e.stopPropagation(); closeMenu(htmlMenu, htmlBtn);
+      try {
+        await copyCurrentHtml();
+        htmlBtn.textContent = "Copied ✓";
+        setTimeout(() => { htmlBtn.textContent = "HTML ▾"; }, 900);
+      } catch (err) {
+        alert(err.message || String(err));
+      }
+    });
+
+    document.addEventListener("click", () => {
+      closeMenu(brandMenu, brandBtn);
+      closeMenu(htmlMenu, htmlBtn);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeMenu(brandMenu, brandBtn);
+        closeMenu(htmlMenu, htmlBtn);
+      }
+    });
+
+    // Restore settings
+    const bootBrand = EMBED_CONFIG?.brand || params.get("brand") || (() => {
+      try { return localStorage.getItem("kalshi_widget_brand") || "vegasinsider"; } catch (_) { return "vegasinsider"; }
+    })();
+    const bootTheme = EMBED_CONFIG?.theme || params.get("theme") || (() => {
+      try { return localStorage.getItem("kalshi_widget_theme") || "dark"; } catch (_) { return "dark"; }
+    })();
+    applyBrand(bootBrand, !IS_LOCKED_EXPORT);
+    setTheme(bootTheme, !IS_LOCKED_EXPORT);
+    applyLockedExportChrome();
+
+    activeRange = EMBED_CONFIG?.range || activeRange;
+    if (EMBED_CONFIG?.eventChartMode === "selected" || EMBED_CONFIG?.eventChartMode === "default") {
+      eventChartMode = EMBED_CONFIG.eventChartMode;
+    }
+    if (EMBED_CONFIG?.selectedEventMarketTicker) {
+      selectedEventMarketTicker = String(EMBED_CONFIG.selectedEventMarketTicker).toUpperCase();
+    }
+
+    updateRangeButtonsActive();
+    updateChartModeButtons();
+    updateSelectedModeAvailability();
+
+    // Boot from locked export config or URL if available
+    const bootEvent = (EMBED_CONFIG?.eventTicker || params.get("event") || "").trim();
+    const bootTicker = (EMBED_CONFIG?.marketTicker || params.get("ticker") || "").trim();
+    if (bootEvent) {
+      if (inputBox) inputBox.value = bootEvent.toUpperCase();
+      loadEvent(bootEvent.toUpperCase());
+    } else if (bootTicker) {
+      if (inputBox) inputBox.value = bootTicker.toUpperCase();
+      loadMarket(bootTicker.toUpperCase());
+    }
+
+    // Auto refresh
+    setInterval(async () => {
+      if (document.hidden) return;
+      try {
+        if (activeMode === "market") {
+          await refreshActiveMarketSnapshot();
+          if (activeMarketTicker) await loadChartForMarketTickers([activeMarketTicker]);
+        } else if (activeMode === "event") {
+          await refreshActiveEventList();
+          await loadEventChart();
+        }
+      } catch (_) {}
+    }, AUTO_REFRESH_MS);
+  </script>
+
+
+</body></html>
